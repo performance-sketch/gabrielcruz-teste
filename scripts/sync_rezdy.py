@@ -92,9 +92,11 @@ while True:
     off += 100
 
 # agrupa por horário de saída (produtos no mesmo horário = mesmo voo)
-slots = defaultdict(lambda: {"produtos": set(), "min": 0, "bookings": []})
+# reservas canceladas ficam em "cancelados" (so o financeiro usa); as telas continuam so com as ativas
+slots = defaultdict(lambda: {"produtos": set(), "min": 0, "bookings": [], "cancelados": [], "prod_c": set(), "min_c": 0})
 for b in bookings:
-    if b.get("status") not in ATIVOS:
+    cancelada = b.get("status") == "CANCELLED"
+    if b.get("status") not in ATIVOS and not cancelada:
         continue
     pags = b.get("payments") or []
     cortesia = bool(pags) and all(p.get("type") == "FREE" for p in pags)
@@ -111,8 +113,13 @@ for b in bookings:
         if not ini:
             continue
         s = slots[ini[:16]]
-        s["produtos"].add(it.get("productName"))
-        s["min"] = max(s["min"], duracao.get(it.get("productCode"), 30))
+        dur = duracao.get(it.get("productCode"), 30)
+        if cancelada:
+            s["prod_c"].add(it.get("productName"))
+            s["min_c"] = max(s["min_c"], dur)
+        else:
+            s["produtos"].add(it.get("productName"))
+            s["min"] = max(s["min"], dur)
         reg = {
             "order": b["orderNumber"],
             "pax": it.get("totalQuantity") or sum(q.get("value", 0) for q in it.get("quantities", [])),
@@ -130,21 +137,31 @@ for b in bookings:
             reg["comissao"] = round(float(b.get("commission") or 0) * k, 2) if pg.get("ota") else 0.0
             reg["a_receber"] = round(max(0.0, float(b.get("totalDue") or 0) * k), 2)
             reg["cortesia"] = cortesia
-        s["bookings"].append(reg)
+            if cancelada:
+                # cancelada: fica so o que foi retido (pago menos estorno); OTA reembolsa por fora da Rezdy
+                if pg.get("ota"):
+                    reg["valor"] = round(reg["valor"] - pg["ota"], 2)
+                    pg["ota_cancelada"] = pg.pop("ota")
+                reg["comissao"] = 0.0
+                reg["a_receber"] = 0.0
+        s["cancelados" if cancelada else "bookings"].append(reg)
 
 
-def monta(chave, s):
+def monta(chave, s, com_cancelados=False):
     v = {
-        "data": chave[:10], "hora": chave[11:16], "produtos": sorted(s["produtos"]),
-        "min": s["min"], "pax": sum(x["pax"] for x in s["bookings"]),
+        "data": chave[:10], "hora": chave[11:16], "produtos": sorted(s["produtos"] or s["prod_c"]),
+        "min": s["min"] or s["min_c"], "pax": sum(x["pax"] for x in s["bookings"]),
         "bookings": s["bookings"],
     }
+    if com_cancelados:
+        v["cancelados"] = s["cancelados"]
     if VALORES:
         v["receita"] = round(sum(x["valor"] for x in s["bookings"]), 2)
     return v
 
 
-todos = [monta(k, slots[k]) for k in sorted(slots)]
+todos = [monta(k, slots[k]) for k in sorted(slots) if slots[k]["bookings"]]  # voos com reservas ativas
+periodo = [monta(k, slots[k], True) for k in sorted(slots)]  # inclui horarios so com canceladas
 
 # capacidade dos horários de hoje
 cap = {}
@@ -178,7 +195,7 @@ dados = {
     "voos_hoje": voos_hoje,
     "semana": semana,
     "proximos": proximos,
-    "periodo": todos,  # todos os horarios do historico (filtro de periodo do financeiro)
+    "periodo": periodo,  # historico com ativas e canceladas (filtro do financeiro)
     "mes": {
         "voos": len(mes),
         "horas": round(sum(v["min"] for v in mes) / 60, 1),
@@ -194,11 +211,11 @@ if VALORES and SENHA:
     from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
     CAMPOS = ("valor", "subtotal", "pg", "comissao", "a_receber", "cortesia")
     cofre = {"v": {}, "b": {}}
-    for v in todos:
+    for v in todos + periodo:
         k = f"{v['data']} {v['hora']}"
         if "receita" in v:
             cofre["v"][k] = v.pop("receita")
-        for b in v["bookings"]:
+        for b in v["bookings"] + v.get("cancelados", []):
             vals = {c: b.pop(c) for c in CAMPOS if c in b}
             if vals:
                 cofre["b"][f"{k}|{b['order']}"] = vals
