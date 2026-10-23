@@ -44,78 +44,121 @@ html,body{height:auto;min-height:1080px;overflow:auto}
 .cn{font-size:15px;color:var(--suave);margin-top:10px}.rl{display:flex;justify-content:space-between;font-size:20px;padding:8px 0;border-bottom:1px solid var(--linha)}.rl.liq{font-size:26px;font-weight:700;border-bottom:none;padding-top:14px}
 .res button{margin-top:18px;border:none;background:#fff;border-radius:14px;padding:12px 18px;font-size:16px;font-weight:600;cursor:pointer}
 
+/* filtro de periodo */
+.per{margin:0 70px 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--card);border-radius:20px;padding:14px 22px}
+.per b{font-size:14px;letter-spacing:.14em;color:var(--suave)}.per label{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.per input[type=date]{font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--linha);border-radius:12px;background:#fff}
+.pre{display:flex;gap:8px;flex-wrap:wrap}.pre button{font:inherit;font-size:14px;font-weight:600;border:none;background:#fff;border-radius:999px;padding:8px 14px;cursor:pointer}.pre button.on{background:var(--tinta);color:#fff}
+#plab{margin-left:auto;font-size:16px;font-weight:600}
+/* indicadores secundarios */
+.mini{display:grid;grid-template-columns:repeat(10,1fr);gap:12px;padding:0 70px 18px}.mini div{background:var(--card);border-radius:16px;padding:12px 14px}.mini span{display:block;font-size:11px;letter-spacing:.12em;color:var(--suave);font-weight:600}.mini b{display:block;font-size:19px;font-weight:700;margin-top:4px;white-space:nowrap}.mini b .falta{font-size:13px;color:var(--suave)}
+/* tabela por voo com mais colunas */
+.tabw{padding:6px 70px 10px}.rv th{font-size:11px;letter-spacing:.08em;padding:8px 6px;text-align:right}.rv td{font-size:14px;padding:6px 6px;text-align:right}
+.rv th:nth-child(-n+4),.rv td:nth-child(-n+4){text-align:left}.rv td small{color:var(--suave);font-size:11px}.rv tr.fut td{font-style:italic;color:#6e6e73}
+.rv tfoot td{font-weight:700;border-top:2px solid var(--tinta);border-bottom:none;padding-top:10px}.rv td .falta{font-size:12px}
+.cg{grid-template-columns:1.3fr 1fr .9fr 1fr!important}.rl b{white-space:nowrap;margin-left:12px}.rl span{white-space:nowrap}
+.amostra{position:static;display:inline-block;margin:0 70px 30px;float:right}.hn td{font-size:17px}
 </style></head><body>
-<header><div style="display:flex;align-items:center;gap:36px"><a class="placa-logo" href="index.html" title="Voltar ao menu"><img src="assets/logo_vertical_rio.svg" alt="Vertical Rio"></a><h1>FINANCEIRO DO DIA</h1></div><div class="restr">ACESSO RESTRITO: PERFIL FINANCEIRO (SIMULAÇÃO)</div></header>
+<header><div style="display:flex;align-items:center;gap:36px"><a class="placa-logo" href="index.html" title="Voltar ao menu"><img src="assets/logo_vertical_rio.svg" alt="Vertical Rio"></a><h1>FINANCEIRO</h1></div><div class="restr">ACESSO RESTRITO: PERFIL FINANCEIRO</div></header>
+<div class="per" id="per"><b>PERÍODO</b><label>De <input type="date" id="de"></label><label>Até <input type="date" id="ate"></label><div class="pre" id="pre"></div><span id="plab"></span></div>
 <div class="kpis" id="kp"></div>
-<div class="corpo"><div><h2 id="rt">RESULTADO POR VOO</h2><table><thead><tr><th>HORA</th><th>VOO</th><th>ROTEIRO</th><th>PAX</th><th>RECEITA BRUTA</th><th>TAXAS</th><th>CUSTO HELINEWS</th><th>RECEITA LÍQUIDA</th></tr></thead><tbody id="tb"></tbody></table>
-<div class="leg">Receita líquida = receita bruta menos taxas da reserva menos custo do fretamento Helinews (minutos de voo x R$/hora da faixa).</div></div>
-<div><h2>TABELA HELINEWS (R$/HORA)</h2><table class="hn"><thead><tr><th>HORAS NO MÊS</th><th>R$/HORA</th></tr></thead><tbody id="hn"></tbody></table><div class="prem" id="pm"></div></div></div>
-<div class="corpo" id="calc"></div>
+<div class="mini" id="mn"></div>
+<div class="tabw"><h2 id="rt">RESULTADO POR VOO</h2><table class="rv"><thead><tr><th>DATA</th><th>HORA</th><th>VOO</th><th>PRODUTO</th><th>PAX</th><th>RES.</th><th>MIN</th><th>RECEITA BRUTA</th><th>STRIPE</th><th>PAYPAL</th><th>REDE / PIX / DIN.</th><th>OTA (GYG)</th><th>DESCONTOS</th><th>TAXA PGTO</th><th>COMISSÃO OTA</th><th>HELINEWS</th><th>RECEITA LÍQUIDA</th><th>MARGEM</th></tr></thead><tbody id="tb"></tbody><tfoot id="tf"></tfoot></table>
+<div class="leg">Receita bruta = dinheiro recebido (Stripe, PayPal, Rede, PIX, dinheiro, OTA) sem descontos/cortesias e menos estornos. Receita líquida = bruta − taxa de pagamento − comissão OTA − custo Helinews (horas x R$/hora da faixa do mês). Voos futuros aparecem em itálico.</div></div>
+<div id="calc"></div>
 <div class="amostra">DADOS DE EXEMPLO</div>
 <script>// sempre a versao mais nova (o GitHub Pages guarda cache por 10 min)
 var _t=Date.now();document.write('<script src="assets/rezdy_dados.js?t='+_t+'"><\/script><script src="assets/dados.js?t='+_t+'"><\/script>')</script>
 <script>
 const n=x=>x.toLocaleString('pt-BR',{maximumFractionDigits:2}),div=(a,b)=>b?a/b:0,pct=x=>(x*100).toFixed(1).replace('.',',')+'%';
-// valores financeiros nao sao publicados no repositorio publico: tudo em R$ aparece como NAO PUBLICADO e a calculadora some
-let SEM_VALOR=!VOOS.some(v=>v.receita!=null),money=SEM_VALOR?()=>FALTA('NÃO PUBLICADO'):brl;
-document.getElementById('rt').textContent='RESULTADO POR VOO, '+dataCurta();
+const $=id=>document.getElementById(id);
+// todos os horarios do historico (Rezdy); codigo do voo por dia (VR101, VR102...) como nas outras telas
+const PER=(_R.periodo||_R.voos_hoje).map(s=>({...s,bookings:s.bookings.map(b=>({...b}))}));
+{const porDia={};PER.forEach(s=>{const i=(porDia[s.data]=(porDia[s.data]||0)+1)-1;s.voo='VR'+(101+i);if(s.data===_R.hoje){const v=VOOS.find(x=>x.hora===s.hora);if(v)s.pulseira=v.pulseira}})}
+const agoraTxt=_R.gerado_em?_R.gerado_em.slice(0,16).replace('T',' '):'';
+const passou=s=>`${s.data} ${s.hora}`<=agoraTxt;
+// horas voadas por mes (define a faixa Helinews de cada mes): soma dos voos ja realizados no mes inteiro
+const HMES={};PER.forEach(s=>{if(passou(s)){const m=s.data.slice(0,7);HMES[m]=(HMES[m]||0)+s.min/60}});
+let SEM_VALOR=!PER.some(s=>s.receita!=null),money=SEM_VALOR?()=>FALTA('NÃO PUBLICADO'):brl;
 // formas de pagamento (classificadas no sync a partir dos pagamentos da Rezdy) e taxa padrao de cada uma
 const MEIOS=[['stripe','Stripe',4],['paypal','PayPal',3.4],['rede','Maquininha Rede',0],['pix','PIX / transferência',0],['dinheiro','Dinheiro',0],['outros','Outros',0]];
-const PADRAO={pct:Object.fromEntries(MEIOS.map(m=>[m[0],m[2]])),otaRezdy:true,otaPct:30,horasHoje:null,horasMes:null,rh:null};
-let C;try{C={...PADRAO,...JSON.parse(localStorage.getItem('vrhub_calc')||'{}')};C.pct={...PADRAO.pct,...C.pct}}catch(e){C={...PADRAO}}
-const salva=()=>{try{localStorage.setItem('vrhub_calc',JSON.stringify(C))}catch(e){}};
-const horasEst=VOOS.reduce((a,v)=>a+v.min,0)/60; // estimativa pela duracao dos produtos
-function calc(){
- const hMes=C.horasMes??HORAS_MES,f=faixa(hMes),rh=C.rh??f[2],hHoje=C.horasHoje??horasEst,fator=div(hHoje,horasEst);
- const L=VOOS.map(v=>{const pg={};let com=0,rec=0;
-  v.bookings.forEach(b=>{for(const k in (b.pg||{}))pg[k]=(pg[k]||0)+b.pg[k];com+=b.comissao||0;rec+=b.a_receber||0});
+const PADRAO={pct:Object.fromEntries(MEIOS.map(m=>[m[0],m[2]])),otaRezdy:true,otaPct:30,horasPer:null,rh:null};
+let C;try{C={...PADRAO,...JSON.parse(localStorage.getItem('vrhub_calc2')||'{}')};C.pct={...PADRAO.pct,...C.pct}}catch(e){C=JSON.parse(JSON.stringify(PADRAO))}
+const salva=()=>{try{localStorage.setItem('vrhub_calc2',JSON.stringify(C))}catch(e){}};
+// ----- periodo -----
+const iso=d=>d.toISOString().slice(0,10),dia=(s,k)=>iso(new Date(new Date(s+'T12:00:00Z').getTime()+k*864e5));
+const HOJE=_R.hoje||iso(new Date()),D1=PER.length?PER[0].data:HOJE,D2=PER.length?PER[PER.length-1].data:HOJE;
+const seg=(()=>{const d=new Date(HOJE+'T12:00:00Z'),w=(d.getUTCDay()+6)%7;return dia(HOJE,-w)})();
+const mesIni=s=>s.slice(0,8)+'01',mesFim=s=>{const d=new Date(s.slice(0,7)+'-01T12:00:00Z');d.setUTCMonth(d.getUTCMonth()+1);d.setUTCDate(0);return iso(d)};
+const mesPassado=dia(mesIni(HOJE),-1);
+const PRESETS=[['Hoje',HOJE,HOJE],['Ontem',dia(HOJE,-1),dia(HOJE,-1)],['Esta semana',seg,dia(seg,6)],['Últimos 7 dias',dia(HOJE,-6),HOJE],['Este mês',mesIni(HOJE),mesFim(HOJE)],['Mês passado',mesIni(mesPassado),mesFim(mesPassado)],['Próximos 7 dias',dia(HOJE,1),dia(HOJE,7)],['Tudo',D1,D2]];
+let P;try{P=JSON.parse(sessionStorage.getItem('vrhub_fin_periodo')||'null')}catch(e){}if(!P)P={de:HOJE,ate:HOJE};
+const br=s=>s.split('-').reverse().slice(0,2).join('/');
+function setPer(de,ate){if(de>ate)[de,ate]=[ate,de];P={de,ate};try{sessionStorage.setItem('vrhub_fin_periodo',JSON.stringify(P))}catch(e){}render()}
+$('de').min=$('ate').min=D1;$('de').max=$('ate').max=D2;
+$('de').onchange=()=>setPer($('de').value||D1,$('ate').value||D2);$('ate').onchange=()=>setPer($('de').value||D1,$('ate').value||D2);
+$('pre').innerHTML=PRESETS.map((p,i)=>`<button data-i="${i}">${p[0]}</button>`).join('');
+$('pre').onclick=e=>{const b=e.target.closest('button');if(b){const p=PRESETS[+b.dataset.i];setPer(p[1],p[2])}};
+// ----- calculo -----
+function calc(){const L0=PER.filter(s=>s.data>=P.de&&s.data<=P.ate),hEst=L0.reduce((a,s)=>a+s.min/60,0),fator=C.horasPer!=null?div(C.horasPer,hEst):1;
+ const L=L0.map(s=>{const pg={};let com=0,rec=0;s.bookings.forEach(b=>{for(const k in (b.pg||{}))pg[k]=(pg[k]||0)+b.pg[k];com+=b.comissao||0;rec+=b.a_receber||0});
   const tx=MEIOS.reduce((a,m)=>a+(pg[m[0]]||0)*C.pct[m[0]]/100,0),ota=C.otaRezdy?com:(pg.ota||0)*C.otaPct/100;
-  const b=v.receita||0,t=tx+ota,c=v.min/60*fator*rh;return{...v,pg,b,t,tx,ota,c,l:b-t-c,rec}});
- return{L,f,rh,hHoje,hMes}}
-function render(){const{L,f,rh,hHoje,hMes}=calc(),S=k=>L.reduce((a,v)=>a+v[k],0),pax=S('pax'),rec=S('rec');
- document.getElementById('kp').innerHTML=`
-<div class="k"><span>RECEITA BRUTA</span><b>${money(S('b'))}</b><small>${L.length} voos, ${pax} passageiros${rec&&!SEM_VALOR?` · ${brl(rec)} a receber`:''}</small></div>
-<div class="k"><span>TAXAS DA RESERVA</span><b>${money(S('t'))}</b><small>${SEM_VALOR?'':`pagamento ${brl(S('tx'))} · OTA ${brl(S('ota'))}`}</small></div>
-<div class="k"><span>CUSTO HELINEWS</span><b>${money(S('c'))}</b><small>${SEM_VALOR?n(hHoje)+' h voadas':n(hHoje)+' h x '+brl(rh)+'/h'}</small></div>
-<div class="k liq"><span>RECEITA LÍQUIDA</span><b>${money(S('l'))}</b><small>margem ${SEM_VALOR?'—':pct(div(S('l'),S('b')))}</small></div>
-<div class="k"><span>TICKET MÉDIO</span><b>${money(div(S('b'),pax))}</b><small>${SEM_VALOR?'por passageiro e por voo':'por passageiro; '+brl(div(S('b'),L.length))+' por voo'}</small></div>`;
- document.getElementById('tb').innerHTML=L.map(v=>`<tr><td>${v.hora}</td><td><span class="bl" style="background:${PULSEIRAS[v.pulseira]}"></span>${v.voo}</td><td>${ROTEIROS[v.rot].nome} (${v.min} min)<br><small style="color:var(--suave);font-size:14px">${v.bookings.map(b=>b.order+(b.cortesia?' (cortesia)':'')).join(' · ')}</small></td><td>${v.pax}</td><td>${money(v.b)}</td><td>${money(v.t)}</td><td>${money(v.c)}</td><td class="${v.l<0&&!SEM_VALOR?'neg':''}" style="font-weight:800">${money(v.l)}</td></tr>`).join('')||'<tr><td colspan=8>Sem voos na Rezdy para hoje</td></tr>';
- document.getElementById('hn').innerHTML=HELINEWS.map(x=>`<tr class="${x===f?'at':''}"><td>${x[3]}${x===f?' (faixa atual)':''}</td><td>${money(x[2])}</td></tr>`).join('');
- document.getElementById('pm').innerHTML=`Mês: ${n(hMes)} h voadas${C.horasMes==null?' (estimado pela duração dos produtos)':' (informado na calculadora)'}, ${VOOS_MES} voos, faixa ${f[3]}.<br>PREMISSA A CONFIRMAR: a tarifa da faixa atual vale para todas as horas do mês (não escalonada).<br>Receita bruta = dinheiro recebido nas reservas ativas (Stripe, PayPal, Rede, PIX, dinheiro, OTA), sem descontos/cortesias e menos estornos.`;
- if(!SEM_VALOR)renderCalc(L,f,rh,hHoje,hMes)}
-// calculadora (so na area de testes, onde ha valores)
-function renderCalc(L,f,rh,hHoje,hMes){const T=k=>L.reduce((a,v)=>a+(v.pg[k]||0),0),S=k=>L.reduce((a,v)=>a+v[k],0);
+  const f=faixa(HMES[s.data.slice(0,7)]||0),rh=C.rh??f[2],h=s.min/60*fator,b=s.receita||0,c=h*rh;
+  return{...s,pg,b,tx,ota,t:tx+ota,h,rh,c,l:b-tx-ota-c,rec,outras:(pg.rede||0)+(pg.pix||0)+(pg.dinheiro||0)+(pg.outros||0)}});
+ return{L,hEst}}
+const SUM=(L,k)=>L.reduce((a,v)=>a+(typeof k==='function'?k(v):v[k]||0),0);
+function render(){const{L,hEst}=calc(),S=k=>SUM(L,k),pax=S('pax'),res=S(v=>v.bookings.length),h=S('h'),b=S('b');
+ $('de').value=P.de;$('ate').value=P.ate;
+ [...$('pre').children].forEach((x,i)=>x.classList.toggle('on',PRESETS[i][1]===P.de&&PRESETS[i][2]===P.ate));
+ $('plab').textContent=(P.de===P.ate?br(P.de):br(P.de)+' a '+br(P.ate))+` · ${L.length} voos`;
+ $('rt').textContent='RESULTADO POR VOO, '+(P.de===P.ate?br(P.de):br(P.de)+' A '+br(P.ate));
+ const rhs=[...new Set(L.map(v=>v.rh))];
+ $('kp').innerHTML=`
+<div class="k"><span>RECEITA BRUTA</span><b>${money(b)}</b><small>${L.length} voos, ${pax} passageiros</small></div>
+<div class="k"><span>TAXAS</span><b>${money(S('t'))}</b><small>${SEM_VALOR?'pagamento e comissão OTA':`pagamento ${brl(S('tx'))} · OTA ${brl(S('ota'))}`}</small></div>
+<div class="k"><span>CUSTO HELINEWS</span><b>${money(S('c'))}</b><small>${SEM_VALOR?n(h)+' h voadas':n(h)+' h x '+(rhs.length===1?brl(rhs[0])+'/h':'faixa de cada mês')}</small></div>
+<div class="k liq"><span>RECEITA LÍQUIDA</span><b>${money(S('l'))}</b><small>margem ${SEM_VALOR?'—':pct(div(S('l'),b))}</small></div>
+<div class="k"><span>TICKET MÉDIO</span><b>${money(div(b,pax))}</b><small>${SEM_VALOR?'por passageiro e por voo':'por passageiro; '+brl(div(b,L.length))+' por voo'}</small></div>`;
+ const mini=[['VOOS',L.length],['PAX',pax],['RESERVAS',res],['HORAS VOADAS',n(h)+' h'],['MÉDIA PAX/VOO',n(+div(pax,L.length).toFixed(1))],
+  ['DESCONTOS / CORTESIAS',money(S(v=>v.pg.desconto||0))],['ESTORNOS',money(S(v=>v.pg.estorno||0))],['A RECEBER',money(S('rec'))],['RECEITA / HORA',money(div(b,h))],['LÍQUIDO / HORA',money(div(S('l'),h))]];
+ $('mn').innerHTML=mini.map(m=>`<div><span>${m[0]}</span><b>${m[1]}</b></div>`).join('');
+ const M=x=>money(x),pv=v=>SEM_VALOR?'—':pct(div(v.l,v.b));
+ $('tb').innerHTML=L.map(v=>`<tr class="${passou(v)?'':'fut'}"><td>${br(v.data)}</td><td>${v.hora}</td><td>${v.pulseira?`<span class="bl" style="background:${PULSEIRAS[v.pulseira]}"></span>`:''}${v.voo}</td><td>${[...new Set(v.produtos.map(nomeProduto))].join(' + ')}<br><small>${v.bookings.map(b=>b.order+(b.cortesia?' (cortesia)':'')).join(' · ')}</small></td><td>${v.pax}</td><td>${v.bookings.length}</td><td>${v.min}</td><td><b>${M(v.b)}</b></td><td>${M(v.pg.stripe||0)}</td><td>${M(v.pg.paypal||0)}</td><td>${M(v.outras)}</td><td>${M(v.pg.ota||0)}</td><td>${M(v.pg.desconto||0)}</td><td>${M(v.tx)}</td><td>${M(v.ota)}</td><td>${M(v.c)}</td><td class="${v.l<0&&!SEM_VALOR?'neg':''}"><b>${M(v.l)}</b></td><td>${pv(v)}</td></tr>`).join('')||'<tr><td colspan=18>Sem voos na Rezdy neste período</td></tr>';
+ $('tf').innerHTML=L.length?`<tr><td colspan=4>TOTAL DO PERÍODO</td><td>${pax}</td><td>${res}</td><td>${S('min')}</td><td>${M(b)}</td><td>${M(S(v=>v.pg.stripe||0))}</td><td>${M(S(v=>v.pg.paypal||0))}</td><td>${M(S('outras'))}</td><td>${M(S(v=>v.pg.ota||0))}</td><td>${M(S(v=>v.pg.desconto||0))}</td><td>${M(S('tx'))}</td><td>${M(S('ota'))}</td><td>${M(S('c'))}</td><td class="${S('l')<0&&!SEM_VALOR?'neg':''}">${M(S('l'))}</td><td>${SEM_VALOR?'—':pct(div(S('l'),b))}</td></tr>`:'';
+ if(!SEM_VALOR)renderCalc(L,hEst)}
+// calculadora (so com a senha)
+function renderCalc(L,hEst){const T=k=>SUM(L,v=>v.pg[k]||0),S=k=>SUM(L,k),b=S('b'),com=SUM(L,v=>v.bookings.reduce((x,o)=>x+(o.comissao||0),0)),ota=T('ota');
+ const meses=[...new Set(L.map(v=>v.data.slice(0,7)))],hm=meses.length?meses[meses.length-1]:HOJE.slice(0,7),fm=faixa(HMES[hm]||0);
  const linhas=MEIOS.map(m=>{const val=T(m[0]);return `<tr><td>${m[1]}</td><td>${brl(val)}</td><td><input type="number" step="0.01" min="0" value="${C.pct[m[0]]}" onchange="C.pct['${m[0]}']=+this.value||0;salva();render()"> %</td><td>${brl(val*C.pct[m[0]]/100)}</td></tr>`}).join('');
- const ota=T('ota'),com=L.reduce((a,v)=>a+v.bookings.reduce((x,b)=>x+(b.comissao||0),0),0);
- document.getElementById('calc').innerHTML=`<h2>CALCULADORA (TESTE) · AJUSTE PARA CHEGAR NO LÍQUIDO REAL DO DIA</h2><div class="cg">
- <div class="cb"><h3>Taxas por forma de pagamento</h3><table class="ct"><thead><tr><th>FORMA</th><th>RECEBIDO HOJE</th><th>TAXA</th><th>VALOR</th></tr></thead><tbody>${linhas}
+ $('calc').innerHTML=`<h2>CALCULADORA (TESTE) · AJUSTE PARA CHEGAR NO LÍQUIDO REAL DO PERÍODO</h2><div class="cg">
+ <div class="cb"><h3>Taxas por forma de pagamento</h3><table class="ct"><thead><tr><th>FORMA</th><th>RECEBIDO</th><th>TAXA</th><th>VALOR</th></tr></thead><tbody>${linhas}
  <tr><td>OTA (GetYourGuide)</td><td>${brl(ota)}</td><td><label><input type="checkbox" ${C.otaRezdy?'checked':''} onchange="C.otaRezdy=this.checked;salva();render()"> comissão da Rezdy</label>${C.otaRezdy?'':` <input type="number" step="0.1" min="0" value="${C.otaPct}" onchange="C.otaPct=+this.value||0;salva();render()"> %`}</td><td>${brl(C.otaRezdy?com:ota*C.otaPct/100)}</td></tr>
- <tr class="tt"><td>Total de taxas</td><td>${brl(S('b'))}</td><td>${pct(div(S('t'),S('b')))} efetivo</td><td>${brl(S('t'))}</td></tr></tbody></table>
- <p class="cn">Descontos e cortesias hoje: ${brl(T('desconto'))} (fora da receita) · Estornos: ${brl(T('estorno'))}</p></div>
+ <tr class="tt"><td>Total de taxas</td><td>${brl(b)}</td><td>${pct(div(S('t'),b))} efetivo</td><td>${brl(S('t'))}</td></tr></tbody></table>
+ <p class="cn">Descontos e cortesias: ${brl(T('desconto'))} (fora da receita) · Estornos: ${brl(T('estorno'))}</p></div>
  <div class="cb"><h3>Helinews</h3>
- <label class="cl">Horas voadas hoje (Helinews)<input type="number" step="0.05" min="0" value="${+hHoje.toFixed(2)}" onchange="C.horasHoje=this.value===''?null:+this.value;salva();render()"><small>estimativa pela duração dos produtos: ${n(horasEst)} h</small></label>
- <label class="cl">Horas voadas no mês (define a faixa)<input type="number" step="0.1" min="0" value="${+hMes.toFixed(1)}" onchange="C.horasMes=this.value===''?null:+this.value;salva();render()"><small>faixa: ${f[3]}</small></label>
- <label class="cl">R$ por hora<input type="number" step="1" min="0" value="${rh}" onchange="C.rh=this.value===''?null:+this.value;salva();render()"><small>tabela para a faixa: ${brl(f[2])}/h</small></label>
- <p class="cn">Custo Helinews hoje: ${n(hHoje)} h x ${brl(rh)} = <b>${brl(S('c'))}</b></p></div>
- <div class="cb res"><h3>Resultado do dia</h3>
- <div class="rl"><span>Receita bruta</span><b>${brl(S('b'))}</b></div><div class="rl"><span>− Taxas de pagamento</span><b>${brl(S('tx'))}</b></div><div class="rl"><span>− Comissão OTA</span><b>${brl(S('ota'))}</b></div><div class="rl"><span>− Custo Helinews</span><b>${brl(S('c'))}</b></div>
- <div class="rl liq"><span>Receita líquida</span><b>${brl(S('l'))}</b></div><div class="rl"><span>Margem</span><b>${pct(div(S('l'),S('b')))}</b></div>
- <button onclick="C=JSON.parse(JSON.stringify(PADRAO));salva();render()">Restaurar padrão</button></div></div>`;
-}
-document.getElementById('calc').style.display=SEM_VALOR?'none':'';
+ <label class="cl">Horas voadas no período (Helinews)<input type="number" step="0.05" min="0" value="${+S('h').toFixed(2)}" onchange="C.horasPer=this.value===''?null:+this.value;salva();render()"><small>estimativa pela duração dos produtos: ${n(hEst)} h${C.horasPer!=null?' · <a href="#" onclick="C.horasPer=null;salva();render();return false">usar estimativa</a>':''}</small></label>
+ <label class="cl">R$ por hora<input type="number" step="1" min="0" value="${C.rh??''}" placeholder="faixa de cada mês" onchange="C.rh=this.value===''?null:+this.value;salva();render()"><small>vazio = tabela pela faixa do mês de cada voo</small></label>
+ <p class="cn">Custo Helinews no período: ${n(S('h'))} h = <b>${brl(S('c'))}</b></p></div>
+ <div class="cb"><h3>Tabela Helinews · ${hm.split('-').reverse().join('/')}</h3><table class="hn"><tbody>${HELINEWS.map(x=>`<tr class="${x===fm?'at':''}"><td>${x[3]}</td><td>${brl(x[2])}</td></tr>`).join('')}</tbody></table>
+ <p class="cn">${n(HMES[hm]||0)} h voadas no mês (estimado). Premissa a confirmar: a tarifa da faixa vale para todas as horas do mês.</p></div>
+ <div class="cb res"><h3>Resultado do período</h3>
+ <div class="rl"><span>Receita bruta</span><b>${brl(b)}</b></div><div class="rl"><span>− Taxas de pagamento</span><b>${brl(S('tx'))}</b></div><div class="rl"><span>− Comissão OTA</span><b>${brl(S('ota'))}</b></div><div class="rl"><span>− Custo Helinews</span><b>${brl(S('c'))}</b></div>
+ <div class="rl liq"><span>Receita líquida</span><b>${brl(S('l'))}</b></div><div class="rl"><span>Margem</span><b>${pct(div(S('l'),b))}</b></div>
+ <button onclick="C=JSON.parse(JSON.stringify(PADRAO));salva();render()">Restaurar padrão</button></div></div>`}
+$('calc').style.display=SEM_VALOR?'none':'';
 render();
+marcaOrigem([]);
 // cofre: valores criptografados no arquivo de dados (AES-GCM); a senha abre so neste navegador
 const COFRE=typeof REZDY_COFRE!=='undefined'?REZDY_COFRE:null;
 async function abreCofre(senha){const b=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
  const km=await crypto.subtle.importKey('raw',new TextEncoder().encode(senha),'PBKDF2',false,['deriveKey']);
  const k=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b(COFRE.salt),iterations:COFRE.it,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['decrypt']);
- const P=JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:b(COFRE.iv)},k,b(COFRE.ct))));
- VOOS.forEach(v=>{const key=_R.hoje+' '+v.hora;v.receita=P.v[key]??0;v.bookings.forEach(x=>Object.assign(x,P.b[key+'|'+x.order]||{}))});
- SEM_VALOR=false;money=brl;document.getElementById('calc').style.display='';document.getElementById('cofre').remove();render()}
-function tentaCofre(senha,silencioso){const m=document.getElementById('cmsg');m.textContent='Abrindo…';
+ const V=JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:b(COFRE.iv)},k,b(COFRE.ct))));
+ PER.forEach(s=>{const key=s.data+' '+s.hora;s.receita=V.v[key]??0;s.bookings.forEach(x=>Object.assign(x,V.b[key+'|'+x.order]||{}))});
+ SEM_VALOR=false;money=brl;$('calc').style.display='';$('cofre').remove();render()}
+function tentaCofre(senha,silencioso){const m=$('cmsg');m.textContent='Abrindo…';
  abreCofre(senha).then(()=>{try{sessionStorage.setItem('vrhub_senha',senha)}catch(e){}}).catch(()=>{m.textContent=silencioso?'':'Senha incorreta.';try{sessionStorage.removeItem('vrhub_senha')}catch(e){}})}
 if(SEM_VALOR&&COFRE){const d=document.createElement('form');d.id='cofre';d.innerHTML='<b>VALORES PROTEGIDOS</b><span>Digite a senha do financeiro para ver receita, taxas e a calculadora.</span><input id="csenha" type="password" autocomplete="current-password" placeholder="Senha"><button>Abrir</button><em id="cmsg"></em>';
- d.onsubmit=e=>{e.preventDefault();tentaCofre(document.getElementById('csenha').value)};document.querySelector('header').after(d);
+ d.onsubmit=e=>{e.preventDefault();tentaCofre($('csenha').value)};$('per').before(d);
  let s=null;try{s=sessionStorage.getItem('vrhub_senha')}catch(e){}if(s)tentaCofre(s,true)}
-marcaOrigem([]);
 </script></body></html>

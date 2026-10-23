@@ -71,7 +71,7 @@ hoje = agora.date()
 seg = hoje - timedelta(days=hoje.weekday())
 dom = seg + timedelta(days=6)
 ate = max(dom, hoje + timedelta(days=7))  # proximos 7 dias
-inicio = min(hoje.replace(day=1), seg)
+inicio = min((hoje - timedelta(days=90)).replace(day=1), seg)  # ~3 meses de historico para o filtro de periodo do financeiro
 
 # produtos: duração por código
 produtos = get("products", {"limit": 100}).get("products", [])
@@ -101,7 +101,8 @@ for b in bookings:
     # pagamentos por forma; divididos entre os itens na proporcao do subtotal
     por_meio = defaultdict(float)
     for p in pags:
-        por_meio[meio(p)] += float(p.get("amount") or 0)
+        m, x = meio(p), float(p.get("amount") or 0)
+        por_meio[m] += abs(x) if m == "estorno" else x  # a Rezdy manda estorno negativo
     tot_itens = sum(float(i.get("subtotal") or i.get("amount") or 0) for i in b.get("items", [])) or 1.0
     for it in b.get("items", []):
         if not eh_voo(it.get("productName")):
@@ -177,6 +178,7 @@ dados = {
     "voos_hoje": voos_hoje,
     "semana": semana,
     "proximos": proximos,
+    "periodo": todos,  # todos os horarios do historico (filtro de periodo do financeiro)
     "mes": {
         "voos": len(mes),
         "horas": round(sum(v["min"] for v in mes) / 60, 1),
