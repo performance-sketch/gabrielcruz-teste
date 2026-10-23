@@ -1,0 +1,138 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Vertical Rio Hub | TV Sala de Espera</title>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+body{background:var(--board);color:var(--flapTxt)}
+header{height:150px;display:flex;align-items:center;justify-content:space-between;padding:0 60px;border-bottom:4px solid #000}
+.tit{font-size:54px;font-weight:800;letter-spacing:6px}.tit small{display:block;font-size:26px;font-weight:500;color:#b9b4b0;letter-spacing:4px}
+.relogio{font-size:84px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:4px}
+.cab,.linha{display:grid;grid-template-columns:250px 250px 240px 1fr;align-items:center;padding:0 60px;column-gap:40px}
+.cab{height:70px;font-size:28px;font-weight:700;color:#b9b4b0;letter-spacing:4px}.cab span small{font-weight:400;font-size:20px;margin-left:10px;color:#7d7875}
+.linha{height:96px;border-top:2px solid #000}
+.flaps{display:flex;gap:4px}.en{font-size:22px;color:#b9b4b0;letter-spacing:3px;margin-top:4px;height:26px}.trad{font-size:18px;color:#7d7875;letter-spacing:1px}
+.c{width:44px;height:66px;background:var(--flap);border-radius:5px;position:relative;font-size:48px;font-weight:800;display:flex;align-items:center;justify-content:center;font-family:"DejaVu Sans Mono",Menlo,Consolas,monospace;box-shadow:inset 0 -2px 0 #000}
+.c::after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;background:#0b0a0a}
+.c.flip{animation:flip .09s linear}
+@keyframes flip{0%{transform:scaleY(1)}50%{transform:scaleY(.15)}100%{transform:scaleY(1)}}
+.pcell{display:flex;align-items:center;gap:20px}
+.bloco{width:110px;height:76px;border-radius:6px;transition:background .6s;box-shadow:inset 0 0 0 3px rgba(0,0,0,.35)}
+.rodape{position:absolute;bottom:0;left:0;right:0;height:72px;background:#000;display:flex;align-items:center;padding:0 60px;font-size:28px;color:#d8d4d0;letter-spacing:1px}
+/* modo poucos */
+#poucos{display:none;position:absolute;top:150px;left:0;right:0;bottom:72px;padding:50px 80px}
+body.poucos #quadro{display:none}body.poucos #poucos{display:grid;grid-template-columns:1fr 640px;gap:60px}
+.rot{font-size:40px;letter-spacing:8px;color:#b9b4b0;font-weight:700}
+.vgrande{font-size:180px;font-weight:900;line-height:1;letter-spacing:6px;margin:10px 0 0}
+.hgrande{font-size:64px;font-weight:700;margin-top:8px}
+.cd{margin-top:46px}.cdnum{font-size:190px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1;color:#f5c400}
+.pulsGrande{border-radius:28px;display:flex;flex-direction:column;justify-content:flex-end;padding:40px;height:100%;box-shadow:inset 0 0 0 8px rgba(0,0,0,.25)}
+.pulsGrande b{font-size:84px;font-weight:900;color:#231F20;background:rgba(255,255,255,.85);padding:6px 24px;border-radius:12px;align-self:flex-start}
+.pulsGrande span{font-size:38px;font-weight:700;color:#231F20;background:rgba(255,255,255,.85);padding:6px 24px;border-radius:12px;align-self:flex-start;margin-top:14px}
+.depois{margin-top:40px;font-size:36px;color:#d8d4d0}.depois .bl{display:inline-block;width:46px;height:30px;border-radius:5px;vertical-align:-4px;margin:0 12px}
+.idi{font-size:34px;font-weight:800;letter-spacing:3px;color:#5d5856}.idi b{color:#141213;background:#f5c400;padding:2px 12px;border-radius:6px}.idi small{display:block;font-size:18px;font-weight:500;color:#9a9592;letter-spacing:1px;text-align:right;margin-top:6px;min-height:22px}
+
+body{background:radial-gradient(1400px 900px at 70% 0%,#1a1a1d 0%,#0e0e10 60%)}
+header{height:150px;border-bottom:none;padding:0 80px}
+.tit{font-size:44px;font-weight:600;letter-spacing:.02em}
+.relogio{font-size:72px;font-weight:300;letter-spacing:0}
+.idi{font-size:22px;font-weight:600;letter-spacing:.14em;color:#6e6e73}.idi b{background:rgba(245,196,0,.16);color:#f5c400;padding:4px 12px;border-radius:999px}.idi small{font-size:14px;color:#6e6e73;letter-spacing:.04em}
+.cab{height:60px;padding:0 80px;font-size:20px;font-weight:600;letter-spacing:.16em;color:#6e6e73}
+.cab,.linha{padding:0 80px;grid-template-columns:240px 240px 220px 1fr}
+.linha{border-top:none;height:96px}
+.c{background:linear-gradient(#232326 0 50%,#1c1c1e 50% 100%);border-radius:7px;box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 2px 6px rgba(0,0,0,.35);font-family:-apple-system,"SF Pro Display",Inter,Roboto,sans-serif;font-weight:600;color:#f5f5f7;perspective:400px}
+.c::after{background:rgba(0,0,0,.55);height:1px}
+.c.flip{animation:flip .12s cubic-bezier(.4,0,.2,1)}
+@keyframes flip{0%{transform:rotateX(0)}50%{transform:rotateX(70deg);filter:brightness(.7)}100%{transform:rotateX(0)}}
+.bloco{width:96px;height:64px;border-radius:14px;box-shadow:none}
+.rodape{background:transparent;height:80px;padding:0 80px;font-size:24px;color:#a1a1a6;border-top:1px solid rgba(255,255,255,.06)}
+#poucos{padding:40px 80px 40px;animation:entra .6s ease}
+.rot{font-size:28px;letter-spacing:.2em;color:#86868b;font-weight:600}
+.vgrande{font-size:190px;font-weight:700;letter-spacing:-.02em;margin-top:6px}
+.hgrande{font-size:52px;font-weight:500}
+.cdnum{font-size:180px;font-weight:600;color:#f5c400;letter-spacing:-.02em}
+.pulsGrande{border-radius:40px;box-shadow:0 30px 80px rgba(0,0,0,.45);padding:44px;transition:background .8s ease}
+.pulsGrande b{background:rgba(255,255,255,.92);font-weight:700;font-size:76px;border-radius:18px;padding:8px 28px}
+.pulsGrande span{background:rgba(255,255,255,.75);font-size:28px;font-weight:600;letter-spacing:.12em;border-radius:12px}
+.depois{font-size:30px;color:#a1a1a6}.depois .bl{border-radius:8px}
+.amostra{color:#f5f5f7}
+/* logo invertida: branca sobre fundo escuro */
+.placa-logo{background:#000}.placa-logo img{filter:brightness(0) invert(1)}
+/* order numbers */
+body.poucos #poucos{grid-template-columns:1fr 760px}
+.prod{font-size:56px;font-weight:600;color:#d8d4d0;margin-top:8px;letter-spacing:.01em}
+.info{margin-top:40px;display:flex;flex-direction:column;gap:34px}.stv{font-size:60px;font-weight:600;margin-top:8px;letter-spacing:.01em}.pulv{display:flex;align-items:center;gap:24px;font-size:60px;font-weight:600;margin-top:10px}.pulv .bloco{width:120px;height:72px;border-radius:16px}
+.hvoo{font-size:240px;font-weight:700;letter-spacing:-.03em;line-height:1;margin-top:6px;font-variant-numeric:tabular-nums}
+.cd{margin-top:40px}.cdnum{font-size:120px}
+.ords{background:rgba(255,255,255,.04);border-radius:32px;padding:36px 44px;align-self:start}.lista{margin-top:16px}
+.ord{display:flex;align-items:baseline;justify-content:space-between;gap:24px;font-size:44px;font-weight:600;letter-spacing:.04em;padding:14px 0;border-top:1px solid rgba(255,255,255,.08);font-variant-numeric:tabular-nums}.ord:first-child{border-top:none}
+.lista.mini .ord{font-size:32px;padding:8px 0}.ord small{font-size:24px;color:#a1a1a6;font-weight:500;letter-spacing:.02em;white-space:nowrap}
+.prox{margin-top:22px}.pl{display:flex;align-items:center;gap:16px;font-size:24px;color:#d8d4d0;margin-top:8px;white-space:nowrap}.pl b{font-weight:600}.pl .bl{display:inline-block;width:34px;height:22px;border-radius:6px}.pl em{font-style:normal;font-size:16px;letter-spacing:.12em;color:#86868b}.pl .po{font-size:20px;color:#a1a1a6;overflow:hidden;text-overflow:ellipsis}
+
+</style></head><body>
+<header><div style="display:flex;align-items:center;gap:40px"><a class="placa-logo" href="index.html" title="Voltar ao menu"><img src="assets/logo_vertical_rio.svg" alt="Vertical Rio"></a>
+<div class="tit" id="tit">PARTIDAS</div></div><div style="display:flex;align-items:center;gap:60px"><div class="idi" id="idi"></div><div class="relogio" id="rel">00:00</div></div></header>
+<div id="quadro">
+<div class="cab"><span id="hH"></span><span id="hV"></span><span id="hP"></span><span id="hS"></span></div>
+<div id="linhas"></div></div>
+<div id="poucos"></div>
+<div class="rodape" id="rod"></div>
+<div class="amostra">DADOS DE EXEMPLO</div>
+<script>// sempre a versao mais nova (o GitHub Pages guarda cache por 10 min)
+var _t=Date.now();document.write('<script src="assets/rezdy_dados.js?t='+_t+'"><\/script><script src="assets/dados.js?t='+_t+'"><\/script>')</script>
+<script>
+// Rotacao de idioma do quadro (segundos). Sobrescreva com ?idioma_seg=N . Fixe um idioma com ?idioma=pt|en|es
+const IDIOMA_SEG_PADRAO=5;
+const IDIOMA_SEG=Math.max(1,+(param('idioma_seg'))||IDIOMA_SEG_PADRAO);
+const IDIOMAS=['pt','en','es'];
+let lang=IDIOMAS.includes(param('idioma'))?param('idioma'):'pt';
+const TX={
+ pt:{res:'RESERVAS',decEm:'DECOLAGEM EM',decAg:'DECOLANDO',tit:'PARTIDAS',h:['HORA','VOO','PULSEIRA','STATUS'],st:s=>s,cor:c=>c,prox:'PRÓXIMO VOO',dec:'Decolagem',embEm:'EMBARQUE EM',embAg:'EMBARQUE AGORA',dep:'Depois',pul:'PULSEIRA',nada:'SEM MAIS VOOS HOJE',rod:'Confira a cor da sua pulseira.',rodEmb:(v,c)=>`Embarque ${v}: pulseira ${c}.`,rodP:c=>`Passageiros com pulseira ${c}, aguardem a chamada.`},
+ en:{res:'BOOKINGS',decEm:'DEPARTURE IN',decAg:'DEPARTING NOW',tit:'DEPARTURES',h:['TIME','FLIGHT','WRISTBAND','STATUS'],st:s=>STATUS_EN[s],cor:c=>({PRETA:'BLACK',BRANCA:'WHITE',AMARELA:'YELLOW',VERDE:'GREEN'})[c],prox:'NEXT FLIGHT',dec:'Departure',embEm:'BOARDING IN',embAg:'BOARDING NOW',dep:'Later',pul:'WRISTBAND',nada:'NO MORE FLIGHTS TODAY',rod:'Check your wristband color.',rodEmb:(v,c)=>`Boarding ${v}: ${c} wristband.`,rodP:c=>`${c} wristband passengers, please wait for the call.`},
+ es:{res:'RESERVAS',decEm:'DESPEGUE EN',decAg:'DESPEGANDO',tit:'SALIDAS',h:['HORA','VUELO','PULSERA','ESTADO'],st:s=>({'CONFIRMADO':'CONFIRMADO','DECOLOU':'DESPEGÓ','CHECK-IN ABERTO':'CHECK-IN ABIERTO','BRIEFING DE SEGURANÇA':'BRIEFING DE SEGURIDAD','EQUIPANDO':'EQUIPÁNDOSE','EMBARQUE':'EMBARQUE'})[s],cor:c=>({PRETA:'NEGRA',BRANCA:'BLANCA',AMARELA:'AMARILLA',VERDE:'VERDE'})[c],prox:'PRÓXIMO VUELO',dec:'Despegue',embEm:'EMBARQUE EN',embAg:'EMBARQUE AHORA',dep:'Después',pul:'PULSERA',nada:'NO HAY MÁS VUELOS HOY',rod:'Verifique el color de su pulsera.',rodEmb:(v,c)=>`Embarque ${v}: pulsera ${c}.`,rodP:c=>`Pasajeros con pulsera ${c}, esperen el llamado.`}};
+const ALF='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-';
+const forcar=param('modo')==='poucos';
+let agora=agoraRio();
+const N=8;const W={hora:5,voo:5,st:21};
+const lin=document.getElementById('linhas');
+function mkFlaps(n){const d=document.createElement('div');d.className='flaps';for(let i=0;i<n;i++){const c=document.createElement('div');c.className='c';c.textContent=' ';d.appendChild(c)}return d}
+const rows=[];for(let i=0;i<N;i++){const r=document.createElement('div');r.className='linha';
+ const h=mkFlaps(W.hora),v=mkFlaps(W.voo),pc=document.createElement('div');pc.className='pcell';const b=document.createElement('div');b.className='bloco';pc.append(b);const s=mkFlaps(W.st);
+ r.append(h,v,pc,s);lin.appendChild(r);rows.push({h,v,b,s})}
+function setFlaps(el,txt,cor){txt=txt.toUpperCase().padEnd(el.children.length,' ');if(param('captura')){[...el.children].forEach((c,i)=>{c.style.color=cor||'';c.textContent=txt[i]});return}[...el.children].forEach((c,i)=>{c.style.color=cor||'';const alvo=txt[i];if(c.textContent===alvo)return;
+ let passos=4+Math.floor(Math.random()*8);const t=setInterval(()=>{c.classList.remove('flip');void c.offsetWidth;c.classList.add('flip');
+ if(--passos<=0){c.textContent=alvo;clearInterval(t)}else c.textContent=ALF[Math.floor(Math.random()*ALF.length)]},70)})}
+function ov(){try{return JSON.parse(localStorage.getItem("vrhub_status")||"{}")}catch(e){return {}}}
+function stOf(v){return ov()[v.voo]||statusDe(v,agora)}
+function cabecalho(){const t=TX[lang];document.getElementById('tit').textContent=t.tit;['hH','hV','hP','hS'].forEach((id,i)=>document.getElementById(id).textContent=t.h[i]);
+ document.getElementById('idi').innerHTML=IDIOMAS.map(l=>l===lang?`<b>${l.toUpperCase()}</b>`:l.toUpperCase()).join(' · ')+`<small>${lang==='pt'?'':'tradução sugerida'}</small>`}
+function render(){cabecalho();const t=TX[lang];
+ document.getElementById('rel').textContent=fmtHM(agora);
+ const futuros=VOOS.map(v=>({...v,st:stOf(v)})).filter(v=>v.st!=='DECOLOU');
+ const poucos=true;document.body.classList.toggle('poucos',poucos);
+ if(poucos){renderPoucos(futuros);return}
+ const vis=futuros.slice(0,N);
+ rows.forEach((r,i)=>{const v=vis[i];if(!v){setFlaps(r.h,'');setFlaps(r.v,'');setFlaps(r.s,'');r.b.style.background='transparent';return}
+  setFlaps(r.h,v.hora);setFlaps(r.v,v.voo);r.b.style.background=PULSEIRAS[v.pulseira];setFlaps(r.s,t.st(v.st),COR_ST[v.st])});
+ const emb=futuros.find(v=>v.st==='EMBARQUE');
+ document.getElementById('rod').textContent=emb?t.rodEmb(emb.voo,t.cor(emb.pulseira)):t.rod;
+}
+// order numbers da Rezdy no proximo voo e nos seguintes
+const chipOrd=b=>`<div class="ord"><span>${b.order}</span><small>${b.pax} pax${b.status==='CONFIRMED'?'':' · '+b.status.replace('_',' ')}</small></div>`;
+function ordens(v,t){return `<div class="ords"><div class="rot">${t.res} · ${v.bookings.length} · ${v.pax} PAX</div><div class="lista${v.bookings.length>6?' mini':''}">${v.bookings.map(chipOrd).join('')}</div></div>`}
+function renderPoucos(f){cabecalho();const t=TX[lang];const el=document.getElementById('poucos');const v=f[0];
+ document.getElementById('rod').textContent='';
+ if(!v){el.innerHTML=`<div><div class="rot">${t.nada}</div></div>`;return}
+ const mk=param('limpo')?'':'falta';
+ el.innerHTML=`<div><div class="rot">${t.prox}</div><div class="hvoo">${v.hora}</div><div class="prod">${v.prod}</div>
+ <div class="info"><div><div class="rot">${t.h[3]}</div><div class="stv" style="color:${COR_ST[v.st]}">${t.st(v.st)}</div></div>
+ <div><div class="rot">${t.pul}</div><div class="pulv"><span class="bloco" style="background:${PULSEIRAS[v.pulseira]};${v.pulseira==='PRETA'?'box-shadow:0 0 0 2px rgba(255,255,255,.35)':''}"></span><span class="${mk}">${t.cor(v.pulseira)}</span></div></div></div></div>
+ ${ordens(v,t)}`;
+}
+marcaOrigem(['Pulseira: cor atribuída em rodízio pelo hub','Status do voo: automático pelo horário ou definido na TV Escritório / iPad']);
+setTimeout(()=>location.reload(),5*60*1000); // puxa dados novos da Rezdy
+window.addEventListener("storage",e=>{if(e.key==="vrhub_status")render()});
+render();
+// troca de idioma: quadro inteiro (cabecalhos + status) a cada IDIOMA_SEG
+if(!param('idioma'))setInterval(()=>{lang=IDIOMAS[(IDIOMAS.indexOf(lang)+1)%3];render()},IDIOMA_SEG*1000);
+// atualizacao simulada: quadro a cada 8s avanca 5 min; modo poucos corre em tempo real
+setInterval(()=>{if(document.body.classList.contains('poucos')){agora=agoraRio();renderPoucos(VOOS.map(v=>({...v,st:stOf(v)})).filter(v=>v.st!=='DECOLOU'));document.getElementById('rel').textContent=fmtHM(agora)}},1000);
+setInterval(()=>{if(!document.body.classList.contains('poucos')){agora=agoraRio();render()}else if(!forcar){render()}},8000);
+</script></body></html>

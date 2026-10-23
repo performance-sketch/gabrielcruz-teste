@@ -1,0 +1,37 @@
+name: Sync Rezdy
+
+on:
+  schedule:
+    # a cada 15 min, das 07h às 21h (Rio = UTC-3)
+    - cron: '*/15 10-23 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: sync-rezdy
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instalar criptografia
+        run: pip install cryptography
+      - name: Buscar voos e bookings na Rezdy (valores criptografados)
+        run: python scripts/sync_rezdy.py
+        env:
+          REZDY_API_KEY: ${{ secrets.REZDY_API_KEY }}
+          INCLUIR_VALORES: "1"
+          SENHA_FINANCEIRO: ${{ secrets.SENHA_FINANCEIRO }}
+          CRIPTO_OBRIGATORIA: "1"   # sem senha o sync falha em vez de gravar valores em texto aberto
+      - name: Commit se mudou
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/rezdy_dados.js
+          git diff --cached --quiet || (git commit -m "dados Rezdy $(TZ=America/Sao_Paulo date '+%d/%m %H:%M')" && git pull --rebase && git push)

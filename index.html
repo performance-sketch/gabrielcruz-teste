@@ -1,0 +1,30 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Vertical Rio Hub</title>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+html,body{height:auto;min-height:1080px;overflow:auto}
+main{max-width:1440px;margin:0 auto;padding:90px 60px;animation:entra .6s ease}
+.topo{display:flex;align-items:center;justify-content:space-between}.placa-logo{padding:0;background:none}.placa-logo img{height:52px}
+.data{font-size:20px;color:var(--suave);font-weight:500}
+h1{font-size:64px;font-weight:700;letter-spacing:-.03em;margin:80px 0 12px}
+.sub{font-size:24px;color:var(--suave);margin-bottom:56px}
+.grade{display:grid;grid-template-columns:repeat(2,1fr);gap:28px}
+a.card{display:block;text-decoration:none;color:inherit;background:#fff;border-radius:28px;padding:40px 44px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 30px rgba(0,0,0,.05);transition:transform .25s ease,box-shadow .25s ease}
+a.card:hover{transform:translateY(-4px);box-shadow:0 2px 4px rgba(0,0,0,.05),0 18px 50px rgba(0,0,0,.09)}
+.tag{display:inline-block;font-size:13px;font-weight:600;letter-spacing:.14em;color:var(--suave);background:var(--card);padding:6px 12px;border-radius:999px}
+.tag.r{background:#fdf6d8;color:#8a6d00}
+.card h2{font-size:36px;font-weight:600;letter-spacing:-.02em;margin:22px 0 10px}.card p{font-size:19px;color:#6e6e73;line-height:1.5}
+.card .ir{margin-top:26px;font-size:18px;font-weight:600}
+.mini{display:flex;gap:10px;margin-top:22px}.mini i{width:34px;height:10px;border-radius:999px}
+</style></head><body><main>
+<div class="topo"><div class="placa-logo"><img src="assets/logo_vertical_rio.svg" alt="Vertical Rio"></div><div class="data" id="dt"></div></div>
+<h1>Vertical Rio Hub <span style="font-size:24px;vertical-align:middle;background:#fdf6d8;color:#8a6d00;padding:6px 14px;border-radius:999px;letter-spacing:.1em">ÁREA DE TESTES</span></h1><div class="sub">Telas internas e de sala de espera. Dados reais da Rezdy.</div>
+<div class="grade">
+<a class="card" href="tv_sala_espera.html"><span class="tag">TV SALA DE ESPERA</span><h2>Próximo voo</h2><p>Mostra sempre o próximo voo, com status em letras que viram, contagem regressiva e cor da pulseira. Português, inglês e espanhol em rodízio.</p><div class="mini"><i style="background:#1c1c1e"></i><i style="background:#f4f2ee;outline:1px solid #ccc"></i><i style="background:#f5c400"></i><i style="background:#2e9d4f"></i></div><div class="ir">Abrir painel</div></a>
+<a class="card" href="tv_escritorio.html"><span class="tag">TV ESCRITÓRIO</span><h2>Operação do dia</h2><p>Agenda com pax e reservas da Rezdy, clima e indicadores do mês. Sem valores financeiros.</p><div class="ir">Abrir tela</div></a>
+<a class="card" href="ipad_operacao.html"><span class="tag">IPAD OPERAÇÃO</span><h2>Controle de status</h2><p>Atualiza o status de cada voo nas TVs e permite anunciar manualmente na Central de Avisos.</p><div class="ir">Abrir controle</div></a>
+<a class="card" href="central_avisos.html"><span class="tag">ANUNCIAR</span><h2>Central de Avisos</h2><p>Chamada de passageiros por voz, acionada sempre por uma pessoa. Ambiente de teste.</p><div class="ir">Abrir central</div></a>
+<a class="card" href="hub_financeiro.html"><span class="tag r">ACESSO RESTRITO</span><h2>Financeiro</h2><p>Receita bruta e order numbers da Rezdy, taxas (estimadas), custo Helinews por faixa de horas, receita líquida e ticket médio.</p><div class="ir">Abrir financeiro</div></a>
+</div></main><div class="amostra">DADOS DE EXEMPLO</div>
+<script>// sempre a versao mais nova (o GitHub Pages guarda cache por 10 min)
+var _t=Date.now();document.write('<script src="assets/rezdy_dados.js?t='+_t+'"><\/script><script src="assets/dados.js?t='+_t+'"><\/script>')</script>
+<script>document.getElementById('dt').textContent=dataLonga();marcaOrigem(['Pulseira: cor atribuída em rodízio pelo hub','Código do voo (VR101, VR102…): gerado pelo hub, a Rezdy só tem horário e produto','Status do voo: automático pelo horário + ajuste manual no iPad','Clima (condição, vento, visibilidade, previsão da semana)','Taxas de plataforma e cartão: % fixo estimado (6,5% + 3,2%)','Horas voadas: estimadas pela duração do produto, não pelo tempo real de voo']);</script></body></html>

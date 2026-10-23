@@ -1,0 +1,92 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Vertical Rio Hub | TV Escritório</title>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+header{height:140px;display:flex;align-items:center;justify-content:space-between;padding:0 70px;border-bottom:4px solid var(--tinta)}
+.placa-logo{padding:0}.placa-logo img{height:64px}
+h1{font-size:56px;letter-spacing:4px}.rel{font-size:72px;font-weight:800;font-variant-numeric:tabular-nums}
+.tela{display:none;padding:40px 70px;height:870px}.tela.on{display:block}
+.dots{position:fixed;bottom:22px;left:70px;display:flex;gap:14px}.dots i{width:90px;height:10px;background:var(--linha);border-radius:5px}.dots i.on{background:var(--tinta)}
+table{width:100%;border-collapse:collapse;font-size:38px}th{text-align:left;font-size:26px;color:var(--suave);letter-spacing:3px;padding:8px 14px;border-bottom:3px solid var(--tinta)}
+td{padding:6px 14px;border-bottom:2px solid var(--linha);font-weight:700}
+.bl{display:inline-block;width:70px;height:40px;border-radius:7px;vertical-align:middle;margin-right:16px;box-shadow:inset 0 0 0 2px rgba(0,0,0,.2)}
+.chip{padding:4px 18px;border-radius:8px;font-size:30px;letter-spacing:2px}
+.sem{display:inline-block;width:38px;height:38px;border-radius:50%;vertical-align:middle;margin-right:12px}
+.cl{display:grid;grid-template-columns:1.25fr 1fr;gap:60px}
+.sm{display:grid;grid-template-columns:repeat(7,1fr);gap:14px;margin-top:20px}.dia{border:3px solid var(--linha);border-radius:14px;padding:18px;text-align:center;font-size:28px;font-weight:700}.dia b{display:block;font-size:44px;margin:8px 0}
+.aviso{margin-top:28px;font-size:30px;font-weight:700;background:#fff6cc;border-left:10px solid var(--atencao);padding:18px 24px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:20px}
+.k{border:4px solid var(--tinta);border-radius:20px;padding:40px}.k span{font-size:32px;color:var(--suave);font-weight:700;letter-spacing:2px}.k b{display:block;font-size:150px;line-height:1.05;font-weight:900}.k small{font-size:30px;font-weight:600}
+.barra{margin-top:50px;font-size:30px;font-weight:700}.trilho{display:flex;gap:6px;margin-top:16px}.trilho div{flex:1;height:70px;background:var(--linha);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px}.trilho .at{background:var(--tinta);color:#fff}.trilho .ok{background:#cfcdcd}
+h2{font-size:40px;letter-spacing:3px;margin-bottom:18px}
+
+header{height:150px;border-bottom:none;padding:0 90px}
+h1{font-size:46px;font-weight:600;letter-spacing:-.01em}.rel{font-size:64px;font-weight:300}
+.tela{padding:20px 90px;animation:entra .6s ease}
+th{border-bottom:1px solid var(--linha);font-size:18px;font-weight:600;letter-spacing:.14em;color:var(--suave);padding:10px 14px}
+td{border-bottom:1px solid #f0f0f3;font-weight:500}
+.bl{border-radius:10px;box-shadow:none;width:56px;height:34px}
+.chip{border-radius:999px;font-size:22px;font-weight:600;letter-spacing:.04em;padding:6px 18px}
+.sem{width:22px;height:22px}
+.dia{border:none;background:var(--card);border-radius:22px;font-weight:500;font-size:24px}.dia b{font-weight:600;font-size:40px}
+.aviso{background:transparent;border-left:none;padding:0;color:var(--suave);font-weight:500;font-size:24px}
+.k{border:none;background:var(--card);border-radius:28px;padding:48px}.k span{font-size:22px;letter-spacing:.14em;font-weight:600}.k b{font-weight:700;letter-spacing:-.03em}.k small{color:var(--suave);font-weight:500}
+.barra{font-size:20px;letter-spacing:.14em;color:var(--suave);font-weight:600}
+.trilho div{border-radius:14px;background:var(--card);color:var(--suave);font-weight:500}.trilho .ok{background:#e8e8ed}.trilho .at{background:var(--tinta);color:#fff}
+.dots{left:90px;bottom:30px}.dots i{width:36px;height:6px;background:#e0e0e5;transition:all .4s}.dots i.on{width:72px;background:var(--tinta)}
+h2{font-size:20px;letter-spacing:.14em;color:var(--suave);font-weight:600}
+.hd{display:flex;align-items:center;gap:40px}.dt{font-size:26px;color:var(--suave);font-weight:500}
+.dots i{cursor:pointer}
+.dias{display:grid;grid-template-columns:repeat(7,1fr);gap:16px;height:820px}.cdia{background:var(--card);border-radius:22px;padding:20px 18px;overflow:hidden}
+.ct{font-size:26px;font-weight:700;text-transform:capitalize}.cr{font-size:17px;color:var(--suave);margin:4px 0 12px;font-weight:500}
+.cv{background:#fff;border-radius:12px;padding:8px 12px;margin-top:8px;display:grid;grid-template-columns:auto 1fr;column-gap:10px;align-items:baseline}.cv b{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}.cv span{font-size:16px;font-weight:500}.cv em{grid-column:1/-1;font-style:normal;font-size:14px;color:var(--suave)}.cv.vazio{display:block;color:var(--suave);font-size:16px;background:none;padding-left:0}
+.pb{border:none;background:none;cursor:pointer;font:inherit;display:inline-flex;align-items:center;padding:4px 8px;border-radius:12px}.pb:hover{outline:2px solid var(--tinta)}
+.stb{border:none;cursor:pointer;font-family:inherit;color:var(--tinta)}.stb:hover{outline:2px solid var(--tinta)}
+#menu{position:fixed;inset:0;background:rgba(20,20,22,.35);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:100}#menu.on{display:flex}
+#menu .cx{background:#fff;border-radius:28px;padding:40px;width:640px;box-shadow:0 30px 80px rgba(0,0,0,.25);animation:entra .25s ease}#menu h3{font-size:30px;font-weight:600;margin-bottom:20px}
+#menu button{display:block;width:100%;height:72px;margin-top:12px;border:none;border-radius:16px;font-size:24px;font-weight:600;letter-spacing:.04em;cursor:pointer;font-family:inherit;color:var(--tinta)}#menu button.at{outline:3px solid var(--tinta)}#menu button.auto{background:var(--card);color:var(--suave)}
+
+</style></head><body>
+<header><div style="display:flex;align-items:center;gap:40px"><a class="placa-logo" href="index.html" title="Voltar ao menu"><img src="assets/logo_vertical_rio.svg" alt="Vertical Rio"></a><h1 id="tt"></h1></div><div class="hd"><div class="dt" id="dt"></div><div class="rel" id="rel"></div></div></header>
+<section class="tela" id="t0"><table><thead><tr><th>HORA</th><th>VOO</th><th>PULSEIRA</th><th>PRODUTO</th><th>PAX</th><th>STATUS</th></tr></thead><tbody id="ag"></tbody></table></section>
+<section class="tela" id="t1"><div class="cl"><div><h2>HOJE: VOOS x CLIMA</h2><table><thead><tr><th>HORA</th><th>VOO</th><th>CONDIÇÃO</th><th>VENTO</th><th>VISIB.</th></tr></thead><tbody id="cv"></tbody></table></div>
+<div><h2>SEMANA</h2><div class="sm" id="sm" style="grid-template-columns:1fr 1fr 1fr 1fr"></div>
+<div style="margin-top:26px;font-size:28px;font-weight:700"><span class="sem" style="background:#2e9d4f"></span>favorável &nbsp; <span class="sem" style="background:#f5c400"></span>atenção &nbsp; <span class="sem" style="background:#c62828"></span>desfavorável</div><div class="aviso">Indicador de apoio. A decisão de voar é sempre do operador (Helinews).</div></div></div></section>
+<section class="tela" id="t2"><div class="kpis" id="kp"></div><div class="barra" id="bt"></div><div class="trilho" id="tr"></div></section>
+<div id="menu" onclick="if(event.target===this)fechaMenu()"><div class="cx"><h3 id="mt"></h3><div id="mo"></div><button class="auto" onclick="fechaMenu()">Cancelar</button></div></div>
+<section class="tela" id="t3"><div class="dias" id="dias"></div></section>
+<div class="dots"><i onclick="vai(0)"></i><i onclick="vai(1)"></i><i onclick="vai(2)"></i><i onclick="vai(3)"></i></div>
+<div class="amostra">DADOS DE EXEMPLO</div>
+<script>// sempre a versao mais nova (o GitHub Pages guarda cache por 10 min)
+var _t=Date.now();document.write('<script src="assets/rezdy_dados.js?t='+_t+'"><\/script><script src="assets/dados.js?t='+_t+'"><\/script>')</script>
+<script>
+const agora=agoraRio();document.getElementById('rel').textContent=fmtHM(agora);setInterval(()=>document.getElementById('rel').textContent=fmtHM(agoraRio()),10000);setTimeout(()=>location.reload(),5*60*1000);const T=['AGENDA DO DIA','CLIMA E VOOS','INDICADORES DO MÊS','PRÓXIMOS DIAS'];document.getElementById('dt').textContent=dataLonga();
+const SBG={'CONFIRMADO':'#e6f4ea','CHECK-IN ABERTO':'#f0f0f3','BRIEFING DE SEGURANÇA':'#e3eefc','EQUIPANDO':'#fdebdc','EMBARQUE':'#fdf3c4','DECOLOU':'#e6f4ea'};
+const ovr=()=>{try{return JSON.parse(localStorage.getItem('vrhub_status')||'{}')}catch(e){return{}}};
+let L=[];
+// agenda: clique no status para mudar manualmente
+function renderAgenda(){const o=ovr(),ag=agoraRio();L=VOOS.map(v=>({...v,st:o[v.voo]||statusDe(v,ag),manual:!!o[v.voo]}));
+document.getElementById('ag').innerHTML=L.map(v=>`<tr><td>${v.hora}</td><td>${FALTA(v.voo)}</td><td><button class="pb" onclick="abrePuls('${v.voo}')"><span class="bl" style="background:${PULSEIRAS[v.pulseira]}"></span>${FALTA(v.pulseira+(v.pulsManual?' ✎':''))}</button></td><td style="font-weight:500">${v.prod}</td><td>${v.pax} <small style="font-size:20px;color:var(--suave);font-weight:500">${v.bookings.length} res.</small></td><td><button class="chip stb" onclick="abreMenu('${v.voo}')" style="background:${SBG[v.st]}">${v.st}${v.manual?' ✎':''}</button></td></tr>`).join('')+`<tr><td colspan=4 style="color:#8a8687">TOTAL DO DIA: ${L.length} voos · ${L.reduce((a,v)=>a+v.bookings.length,0)} reservas</td><td>${L.reduce((a,v)=>a+v.pax,0)}</td><td></td></tr>`;}
+renderAgenda();setInterval(renderAgenda,30000);window.addEventListener('storage',e=>{if(e.key==='vrhub_status')renderAgenda()});
+let menuVoo=null;function abreMenu(voo){menuVoo=voo;const v=L.find(x=>x.voo===voo);document.getElementById('mt').textContent=`${voo} · ${v.hora}`;document.getElementById('mo').innerHTML=STATUS_TODOS.map(s=>`<button style="background:${SBG[s]}" class="${s===v.st?'at':''}" onclick="escolhe('${s}')">${s}</button>`).join('')+`<button class="auto" onclick="escolhe(null)">AUTOMÁTICO (pelo horário)</button>`;document.getElementById('menu').classList.add('on')}
+function abrePuls(voo){menuVoo=voo;const v=VOOS.find(x=>x.voo===voo);document.getElementById('mt').textContent=`${voo} · ${v.hora} · pulseira`;document.getElementById('mo').innerHTML=PULS_ORDEM.map(c=>`<button class="${c===v.pulseira?'at':''}" style="background:${PULSEIRAS[c]};color:${c==='PRETA'||c==='VERDE'?'#fff':'var(--tinta)'}" onclick="escolhePuls('${c}')">${c}</button>`).join('')+`<button class="auto" onclick="escolhePuls(null)">AUTOMÁTICO (rodízio)</button>`;document.getElementById('menu').classList.add('on')}
+function escolhePuls(c){const v=VOOS.find(x=>x.voo===menuVoo),i=VOOS.indexOf(v);setPulseira(menuVoo,c);v.pulseira=c||PULS_ORDEM[i%4];v.pulsManual=!!c;fechaMenu();renderAgenda()}
+function escolhe(s){setStatus(menuVoo,s);fechaMenu();renderAgenda()}function fechaMenu(){document.getElementById('menu').classList.remove('on');menuVoo=null}
+document.querySelector('#t0 table').style.fontSize='30px';
+document.getElementById('cv').innerHTML=L.map(v=>`<tr><td>${v.hora}</td><td>${FALTA(v.voo)}</td><td>${FALTA('SEM DADOS')}</td><td>${FALTA('—')}</td><td>${FALTA('—')}</td></tr>`).join('')||`<tr><td colspan=5>Sem voos hoje</td></tr>`;
+document.querySelector('#t1 table').style.fontSize='26px';
+document.getElementById('sm').innerHTML=`<div class="dia" style="grid-column:1/-1">${FALTA('PREVISÃO DA SEMANA: NÃO VEM DA REZDY')}</div>`;
+const f=faixa(HORAS_MES),i=HELINEWS.indexOf(f);
+document.getElementById('kp').innerHTML=`<div class="k"><span>VOOS EXECUTADOS</span><b>${VOOS_MES}</b><small>no mês de ${mesNome()} · ${_R.mes.pax} pax</small></div><div class="k"><span>HORAS VOADAS</span><b>${HORAS_MES.toLocaleString('pt-BR')}</b><small>horas no mês <span class="falta">(estimado)</span></small></div><div class="k"><span>FAIXA HELINEWS ATUAL</span><b style="font-size:110px;margin:20px 0">${f[3]}</b><small>faltam ${(Math.min(...[f[1]+1])-HORAS_MES).toLocaleString('pt-BR')} h para a próxima faixa</small></div>`;
+document.getElementById('bt').textContent='PROGRESSO NAS FAIXAS DE HORAS DO MÊS';
+document.getElementById('tr').innerHTML=HELINEWS.map((x,j)=>`<div class="${j<i?'ok':j===i?'at':''}">${x[3]}</div>`).join('');
+marcaOrigem(['Pulseira: rodízio automático do hub; clique na pulseira para trocar (vale neste navegador)','Código do voo (VR101, VR102…): gerado pelo hub, a Rezdy só tem horário e produto','Status do voo: automático pelo horário; clique no status para mudar (vale neste navegador)','Clima (condição, vento, visibilidade, previsão da semana)','Horas voadas: estimadas pela duração do produto, não pelo tempo real de voo']);
+// proximos 7 dias (Rezdy): um cartao por dia com horarios, produto e pax
+(function(){const P=_R.proximos||[],dias=[];for(let k=1;k<=7;k++){const d=new Date(DIA_REF.getTime()+k*864e5);dias.push(d.toISOString().slice(0,10))}
+ document.getElementById('dias').innerHTML=dias.map(d=>{const vs=P.filter(v=>v.data===d),dd=new Date(d+'T12:00:00-03:00');
+  const tit=dd.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',timeZone:'America/Sao_Paulo'}).replace('.','').replace(',','');
+  return `<div class="cdia"><div class="ct">${tit}</div><div class="cr">${vs.length} voos · ${vs.reduce((a,v)=>a+v.pax,0)} pax</div>`+
+   (vs.map(v=>`<div class="cv"><b>${v.hora}</b><span>${[...new Set(v.produtos.map(nomeProduto))].join(' + ')}</span><em>${v.pax} pax · ${v.bookings.length} res.</em></div>`).join('')||'<div class="cv vazio">Sem reservas</div>')+'</div>'}).join('')})();
+let n=+(param('tela')||0);function show(){document.querySelectorAll('.tela').forEach((s,j)=>s.classList.toggle('on',j===n));document.querySelectorAll('.dots i').forEach((d,j)=>d.classList.toggle('on',j===n));document.getElementById('tt').textContent=T[n]}
+show();if(param('tela')===null)setInterval(()=>{if(menuVoo)return;n=(n+1)%T.length;show()},20000);
+function vai(j){n=j;show()} // clique nos tracinhos de baixo troca de tela
+</script></body></html>

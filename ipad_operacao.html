@@ -1,0 +1,78 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=1180,user-scalable=no"><title>Vertical Rio Hub | Operação</title>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+html,body{width:1180px;height:820px}
+header{height:96px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:3px solid var(--tinta)}
+.placa-logo{padding:0}.placa-logo img{height:44px}
+h1{font-size:30px;letter-spacing:3px}.rel{font-size:40px;font-weight:800;font-variant-numeric:tabular-nums}
+#lista{height:724px;overflow-y:auto;padding:8px 28px 60px}
+.l{display:grid;grid-template-columns:90px 120px 60px 1fr 86px 330px 150px;align-items:center;gap:16px;height:84px;border-bottom:2px solid var(--linha);font-size:30px;font-weight:700}
+.bl{width:60px;height:44px;border-radius:8px;box-shadow:inset 0 0 0 2px rgba(0,0,0,.25)}
+.rt{font-size:22px;font-weight:500;color:#555}.pax{font-size:24px;color:#555}
+.bt{height:68px;border-radius:14px;border:3px solid var(--tinta);font-size:22px;font-weight:800;letter-spacing:1px;color:var(--tinta);cursor:pointer}
+.an{height:68px;border-radius:14px;border:3px solid var(--tinta);background:var(--tinta);color:#fff;font-size:20px;font-weight:800;letter-spacing:1px;cursor:pointer}.nota{font-size:18px;color:var(--ok);font-weight:700;grid-column:4/8;margin-top:-10px}
+.l.comnota{height:130px}.l{min-height:84px;height:auto!important;padding:8px 0}.ord{font-size:14px;font-weight:600;color:var(--suave);letter-spacing:.02em}.pend{color:#b06000}.pax small{font-size:14px;font-weight:500}
+#dlg{position:fixed;inset:0;background:rgba(35,31,32,.6);display:none;align-items:center;justify-content:center;z-index:50}
+#dlg.on{display:flex}
+.cx{background:#fff;border-radius:22px;padding:44px;width:760px;text-align:center}
+.cx p{font-size:36px;font-weight:800;line-height:1.3;margin-bottom:36px}
+.cx .bts{display:flex;gap:24px}.cx button{flex:1;height:96px;border-radius:16px;font-size:32px;font-weight:800;border:3px solid var(--tinta);background:#fff;cursor:pointer}
+.cx .sim{background:var(--tinta);color:#fff}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:var(--ok);color:#fff;font-size:24px;font-weight:800;padding:18px 30px;border-radius:14px;display:none}
+.amostra{bottom:8px;font-size:13px}
+
+header{height:96px;border-bottom:none;padding:0 32px}
+h1{font-size:24px;font-weight:600;letter-spacing:.02em}.rel{font-size:36px;font-weight:300}
+#lista{padding:0 32px 60px}
+.l{border-bottom:1px solid #f0f0f3;font-weight:600;font-size:26px}
+.bl{border-radius:12px;box-shadow:none}
+.bt{border:none;border-radius:16px;font-size:19px;font-weight:600;letter-spacing:.02em;transition:transform .15s,background .3s}
+.bt:active,.an:active{transform:scale(.97)}
+.an{border:none;border-radius:16px;font-size:17px;font-weight:600;letter-spacing:.06em;background:var(--tinta)}
+#dlg{background:rgba(20,20,22,.35);backdrop-filter:blur(6px)}
+.cx{border-radius:28px;box-shadow:0 30px 80px rgba(0,0,0,.25);animation:entra .25s ease}
+.cx p{font-size:30px;font-weight:600}
+.cx button{border:none;background:var(--card);border-radius:16px;font-size:26px;font-weight:600}
+.cx .sim{background:var(--tinta)}
+.toast{border-radius:999px;font-size:20px;font-weight:600;background:rgba(35,31,32,.92);box-shadow:0 12px 40px rgba(0,0,0,.2)}
+.nota{color:#2e7d4f;font-weight:500}
+.pk{cursor:pointer}.bl.pk:active{transform:scale(.94)}
+#pkd{position:fixed;inset:0;background:rgba(20,20,22,.35);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:120}#pkd.on{display:flex}
+#pkd .cx{width:560px;padding:36px}#pkd p{font-size:26px;margin-bottom:16px}#pkd button{display:block;width:100%;height:76px;margin-top:12px;border:none;border-radius:16px;font-size:24px;font-weight:600;letter-spacing:.04em;cursor:pointer;font-family:inherit}#pkd button.at{outline:3px solid var(--tinta)}#pkd button.auto{background:var(--card);color:var(--suave)}
+
+</style></head><body>
+<header><div style="display:flex;align-items:center;gap:22px"><a class="placa-logo" href="index.html" title="Voltar ao menu"><img src="assets/logo_vertical_rio.svg" alt="Vertical Rio"></a><h1>OPERAÇÃO DO DIA</h1></div><div class="rel" id="rel"></div></header>
+<div id="lista"></div>
+<div id="dlg"><div class="cx"><p id="pq"></p><div class="bts"><button id="nao">Cancelar</button><button class="sim" id="sim">Confirmar</button></div></div></div>
+<div id="pkd" onclick="if(event.target===this)this.classList.remove('on')"><div class="cx"><p id="pkt"></p><div id="pko"></div></div></div>
+<div class="toast" id="toast"></div>
+<div class="amostra">DADOS DE EXEMPLO</div>
+<script>// sempre a versao mais nova (o GitHub Pages guarda cache por 10 min)
+var _t=Date.now();document.write('<script src="assets/rezdy_dados.js?t='+_t+'"><\/script><script src="assets/dados.js?t='+_t+'"><\/script>')</script>
+<script>
+const ORDEM=STATUS;
+const BG={'CONFIRMADO':'#e6f4ea','CHECK-IN ABERTO':'#f0f0f3','BRIEFING DE SEGURANÇA':'#e3eefc','EQUIPANDO':'#fdebdc','EMBARQUE':'#fdf3c4'};
+const agora=agoraRio();setInterval(()=>document.getElementById('rel').textContent=fmtHM(agoraRio()),10000);
+const ov=()=>JSON.parse(localStorage.getItem('vrhub_status')||'{}');
+const notas=JSON.parse(localStorage.getItem('vrhub_notas')||'{}');
+const st=v=>{const s=ov()[v.voo]||statusDe(v,agora);return s==='DECOLOU'?'EMBARQUE':s};
+document.getElementById('rel').textContent=fmtHM(agora);
+let pend=null;
+function render(){document.getElementById('lista').innerHTML=VOOS.map(v=>{const s=st(v);return `<div class="l ${notas[v.voo]?'comnota':''}"><span>${v.hora}</span><span class="falta">${v.voo.replace('VR','VR ')}</span><span class="bl pk" onclick="abrePuls('${v.voo}')" style="background:${PULSEIRAS[v.pulseira]}"></span><span><span class="falta pk" onclick="abrePuls('${v.voo}')">${v.pulseira}${v.pulsManual?' ✎':''}</span><br><span class="rt">${ROTEIROS[v.rot].nome}</span><br><span class="ord">${v.bookings.map(b=>b.status==='CONFIRMED'?b.order:`<span class="pend">${b.order} ${b.status.replace('_',' ')}</span>`).join(' · ')}</span></span><span class="pax">${v.pax} pax<br><small>${v.bookings.length} res.${v.livres!=null?` · ${v.livres} livres`:''}</small></span><button class="bt" style="background:${BG[s]}" onclick="pedir('${v.voo}')">${s}</button><button class="an" onclick="anunciar('${v.voo}')">ANUNCIAR</button>${notas[v.voo]?`<span class="nota">${notas[v.voo]}</span>`:''}</div>`}).join('')}
+function pedir(voo){const v=VOOS.find(x=>x.voo===voo);const i=ORDEM.indexOf(st(v));const prox=ORDEM[(i+1)%ORDEM.length];pend={voo,prox};
+ pend.tipo='status';document.getElementById('pq').textContent=`Confirmar mudança do voo ${voo.replace('VR','VR ')} para ${prox}?`;document.getElementById('dlg').classList.add('on')}
+document.getElementById('nao').onclick=()=>{pend=null;document.getElementById('dlg').classList.remove('on')};
+document.getElementById('sim').onclick=()=>{
+ if(pend.tipo==='status'){const o=ov();o[pend.voo]=pend.prox;localStorage.setItem('vrhub_status',JSON.stringify(o))} // so atualiza as TVs, sem anuncio
+ else{const v=VOOS.find(x=>x.voo===pend.voo);notas[pend.voo]=`Anúncio enviado à Central de Avisos (simulação): ${st(v)}`;localStorage.setItem('vrhub_notas',JSON.stringify(notas));
+  const t=document.getElementById('toast');t.textContent=`${pend.voo}: anúncio enviado à Central de Avisos (simulação)`;t.style.display='block';setTimeout(()=>t.style.display='none',4000);if(!param('demo'))location.href=`central_avisos.html?voo=${encodeURIComponent(v.voo)}&pulseira=${encodeURIComponent(v.pulseira)}&status=${encodeURIComponent(st(v))}&hora=${encodeURIComponent(v.hora)}`}
+ document.getElementById('dlg').classList.remove('on');pend=null;render()};
+function anunciar(voo){const v=VOOS.find(x=>x.voo===voo);pend={voo,tipo:'anuncio'};
+ document.getElementById('pq').textContent=`Anunciar o voo ${voo.replace('VR','VR ')} (pulseira ${v.pulseira}, ${st(v)}) na Central de Avisos?`;document.getElementById('dlg').classList.add('on')}
+// troca da cor da pulseira (mesmo armazenamento da TV escritorio)
+let pkVoo=null;function abrePuls(voo){pkVoo=voo;const v=VOOS.find(x=>x.voo===voo);document.getElementById('pkt').textContent=`Pulseira do voo ${voo.replace('VR','VR ')} (${v.hora})`;document.getElementById('pko').innerHTML=PULS_ORDEM.map(c=>`<button class="${c===v.pulseira?'at':''}" style="background:${PULSEIRAS[c]};color:${c==='PRETA'||c==='VERDE'?'#fff':'var(--tinta)'}" onclick="escolhePuls('${c}')">${c}</button>`).join('')+`<button class="auto" onclick="escolhePuls(null)">AUTOMÁTICO (rodízio)</button><button class="auto" onclick="document.getElementById('pkd').classList.remove('on')">Cancelar</button>`;document.getElementById('pkd').classList.add('on')}
+function escolhePuls(c){const v=VOOS.find(x=>x.voo===pkVoo),i=VOOS.indexOf(v);setPulseira(pkVoo,c);v.pulseira=c||PULS_ORDEM[i%4];v.pulsManual=!!c;document.getElementById('pkd').classList.remove('on');render()}
+window.addEventListener('storage',render);render();if(!VOOS.length)document.getElementById('lista').innerHTML='<div class="l">Sem voos na Rezdy para hoje</div>';
+marcaOrigem(['Pulseira: rodízio automático do hub; toque na pulseira para trocar (vale neste aparelho)','Código do voo (VR101, VR102…): gerado pelo hub, a Rezdy só tem horário e produto','Status do voo: automático pelo horário + ajuste manual no iPad']);
+if(param('demo')){localStorage.clear();for(const k in notas)delete notas[k];render();setTimeout(()=>{const d=param('demo');if(d==='dialogo')pedir('VR104');if(d==='anunciar'||d==='anunciado')anunciar('VR102');if(d==='anunciado')document.getElementById('sim').click()},50)}
+</script></body></html>
