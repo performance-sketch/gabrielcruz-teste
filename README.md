@@ -6,6 +6,16 @@ Link: https://performance-sketch.github.io/gabrielcruz-teste/
 
 **Valores protegidos:** receita e pagamentos saem do arquivo aberto e vão criptografados (AES-256-GCM, chave PBKDF2-SHA256) em `REZDY_COFRE`. A aba Financeiro pede a senha (secret `SENHA_FINANCEIRO`). Sem a senha, o sync falha em vez de gravar valores em texto aberto.
 
+## Dados manuais (desde 30/10/2026)
+A área de testes **não usa mais a API da Rezdy**: tudo é digitado em **Editar dados** (`editar.html`): voos, horário, produto, duração, capacidade, reservas (order, pax, canal, forma de pagamento, valor, comissão OTA, a receber, cancelada), clima por voo e indicadores do mês.
+
+- Os dados ficam salvos **no navegador** (localStorage `vrhub_manual`). Para levar a outro aparelho: *Exportar arquivo* → *Importar arquivo*.
+- `assets/manual.js` monta o mesmo objeto `REZDY` que o sync gerava, então as telas continuam iguais.
+- *Copiar da Rezdy* faz uma cópia única do último `assets/rezdy_dados.js` (sem valores) como ponto de partida.
+- O workflow `sync-rezdy.yml` ficou só com disparo manual (sem agendamento).
+
+O texto abaixo descreve a versão antiga, alimentada pela Rezdy.
+
 ---
 
 

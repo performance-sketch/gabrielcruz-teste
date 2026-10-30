@@ -48,7 +48,7 @@ h1{font-size:24px;font-weight:600;letter-spacing:.02em}.rel{font-size:36px;font-
 <div class="toast" id="toast"></div>
 <div class="amostra">DADOS DE EXEMPLO</div>
 <script>// sempre a versao mais nova (o GitHub Pages guarda cache por 10 min)
-var _t=Date.now();document.write('<script src="assets/rezdy_dados.js?t='+_t+'"><\/script><script src="assets/dados.js?t='+_t+'"><\/script>')</script>
+var _t=Date.now();document.write('<script src="assets/manual.js?t='+_t+'"><\/script><script src="assets/dados.js?t='+_t+'"><\/script>')</script>
 <script>
 const ORDEM=STATUS;
 const BG={'CONFIRMADO':'#e6f4ea','CHECK-IN ABERTO':'#f0f0f3','BRIEFING DE SEGURANÇA':'#e3eefc','EQUIPANDO':'#fdebdc','EMBARQUE':'#fdf3c4'};
@@ -72,7 +72,7 @@ function anunciar(voo){const v=VOOS.find(x=>x.voo===voo);pend={voo,tipo:'anuncio
 // troca da cor da pulseira (mesmo armazenamento da TV escritorio)
 let pkVoo=null;function abrePuls(voo){pkVoo=voo;const v=VOOS.find(x=>x.voo===voo);document.getElementById('pkt').textContent=`Pulseira do voo ${voo.replace('VR','VR ')} (${v.hora})`;document.getElementById('pko').innerHTML=PULS_ORDEM.map(c=>`<button class="${c===v.pulseira?'at':''}" style="background:${PULSEIRAS[c]};color:${c==='PRETA'||c==='VERDE'?'#fff':'var(--tinta)'}" onclick="escolhePuls('${c}')">${c}</button>`).join('')+`<button class="auto" onclick="escolhePuls(null)">AUTOMÁTICO (rodízio)</button><button class="auto" onclick="document.getElementById('pkd').classList.remove('on')">Cancelar</button>`;document.getElementById('pkd').classList.add('on')}
 function escolhePuls(c){const v=VOOS.find(x=>x.voo===pkVoo),i=VOOS.indexOf(v);setPulseira(pkVoo,c);v.pulseira=c||PULS_ORDEM[i%4];v.pulsManual=!!c;document.getElementById('pkd').classList.remove('on');render()}
-window.addEventListener('storage',render);render();if(!VOOS.length)document.getElementById('lista').innerHTML='<div class="l">Sem voos na Rezdy para hoje</div>';
+window.addEventListener('storage',render);render();if(!VOOS.length)document.getElementById('lista').innerHTML='<div class="l">Sem voos para hoje. Cadastre em Editar dados (menu inicial).</div>';
 marcaOrigem(['Pulseira: rodízio automático do hub; toque na pulseira para trocar (vale neste aparelho)','Código do voo (VR101, VR102…): gerado pelo hub, a Rezdy só tem horário e produto','Status do voo: automático pelo horário + ajuste manual no iPad']);
 if(param('demo')){localStorage.clear();for(const k in notas)delete notas[k];render();setTimeout(()=>{const d=param('demo');if(d==='dialogo')pedir('VR104');if(d==='anunciar'||d==='anunciado')anunciar('VR102');if(d==='anunciado')document.getElementById('sim').click()},50)}
 </script></body></html>

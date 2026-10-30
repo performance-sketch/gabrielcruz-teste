@@ -57,12 +57,12 @@ h2{font-size:20px;letter-spacing:.14em;color:var(--suave);font-weight:600}
 <div class="dots"><i onclick="vai(0)"></i><i onclick="vai(1)"></i><i onclick="vai(2)"></i><i onclick="vai(3)"></i></div>
 <div class="amostra">DADOS DE EXEMPLO</div>
 <script>// sempre a versao mais nova (o GitHub Pages guarda cache por 10 min)
-var _t=Date.now();document.write('<script src="assets/rezdy_dados.js?t='+_t+'"><\/script><script src="assets/dados.js?t='+_t+'"><\/script>')</script>
+var _t=Date.now();document.write('<script src="assets/manual.js?t='+_t+'"><\/script><script src="assets/dados.js?t='+_t+'"><\/script>')</script>
 <script>
 const agora=agoraRio();document.getElementById('rel').textContent=fmtHM(agora);setInterval(()=>document.getElementById('rel').textContent=fmtHM(agoraRio()),10000);setTimeout(()=>location.reload(),5*60*1000);const T=['AGENDA DO DIA','CLIMA E VOOS','INDICADORES DO MÊS','PRÓXIMOS DIAS'];document.getElementById('dt').textContent=dataLonga();
 const SBG={'CONFIRMADO':'#e6f4ea','CHECK-IN ABERTO':'#f0f0f3','BRIEFING DE SEGURANÇA':'#e3eefc','EQUIPANDO':'#fdebdc','EMBARQUE':'#fdf3c4','DECOLOU':'#e6f4ea'};
 const ovr=()=>{try{return JSON.parse(localStorage.getItem('vrhub_status')||'{}')}catch(e){return{}}};
-let L=[];
+let L=[];const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
 // agenda: clique no status para mudar manualmente
 function renderAgenda(){const o=ovr(),ag=agoraRio();L=VOOS.map(v=>({...v,st:o[v.voo]||statusDe(v,ag),manual:!!o[v.voo]}));
 document.getElementById('ag').innerHTML=L.map(v=>`<tr><td>${v.hora}</td><td>${FALTA(v.voo)}</td><td><button class="pb" onclick="abrePuls('${v.voo}')"><span class="bl" style="background:${PULSEIRAS[v.pulseira]}"></span>${FALTA(v.pulseira+(v.pulsManual?' ✎':''))}</button></td><td style="font-weight:500">${v.prod}</td><td>${v.pax} <small style="font-size:20px;color:var(--suave);font-weight:500">${v.bookings.length} res.</small></td><td><button class="chip stb" onclick="abreMenu('${v.voo}')" style="background:${SBG[v.st]}">${v.st}${v.manual?' ✎':''}</button></td></tr>`).join('')+`<tr><td colspan=4 style="color:#8a8687">TOTAL DO DIA: ${L.length} voos · ${L.reduce((a,v)=>a+v.bookings.length,0)} reservas</td><td>${L.reduce((a,v)=>a+v.pax,0)}</td><td></td></tr>`;}
@@ -72,7 +72,8 @@ function abrePuls(voo){menuVoo=voo;const v=VOOS.find(x=>x.voo===voo);document.ge
 function escolhePuls(c){const v=VOOS.find(x=>x.voo===menuVoo),i=VOOS.indexOf(v);setPulseira(menuVoo,c);v.pulseira=c||PULS_ORDEM[i%4];v.pulsManual=!!c;fechaMenu();renderAgenda()}
 function escolhe(s){setStatus(menuVoo,s);fechaMenu();renderAgenda()}function fechaMenu(){document.getElementById('menu').classList.remove('on');menuVoo=null}
 document.querySelector('#t0 table').style.fontSize='30px';
-document.getElementById('cv').innerHTML=L.map(v=>`<tr><td>${v.hora}</td><td>${FALTA(v.voo)}</td><td>${FALTA('SEM DADOS')}</td><td>${FALTA('—')}</td><td>${FALTA('—')}</td></tr>`).join('')||`<tr><td colspan=5>Sem voos hoje</td></tr>`;
+const CLIMA_TX={verde:'FAVORÁVEL',amarelo:'ATENÇÃO',vermelho:'DESFAVORÁVEL'};
+document.getElementById('cv').innerHTML=L.map(v=>{const c=v.clima||{};return `<tr><td>${v.hora}</td><td>${FALTA(v.voo)}</td><td>${c.cond?`<span class="sem" style="background:${SEM_COR[c.cond]}"></span>${CLIMA_TX[c.cond]}`:FALTA('SEM DADOS')}</td><td>${c.vento?esc(c.vento):FALTA('—')}</td><td>${c.vis?esc(c.vis):FALTA('—')}</td></tr>`}).join('')||`<tr><td colspan=5>Sem voos hoje</td></tr>`;
 document.querySelector('#t1 table').style.fontSize='26px';
 document.getElementById('sm').innerHTML=`<div class="dia" style="grid-column:1/-1">${FALTA('PREVISÃO DA SEMANA: NÃO VEM DA REZDY')}</div>`;
 const f=faixa(HORAS_MES),i=HELINEWS.indexOf(f);

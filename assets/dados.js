@@ -12,7 +12,7 @@ const pulsOv=()=>{try{return JSON.parse(localStorage.getItem('vrhub_pulseira')||
 function setPulseira(voo,c){try{const o=pulsOv();if(c)o[voo]=c;else delete o[voo];localStorage.setItem('vrhub_pulseira',JSON.stringify(o))}catch(e){}}
 window.addEventListener('storage',e=>{if(e.key==='vrhub_pulseira')location.reload()}); // outra tela mudou a pulseira
 const VOOS=_R.voos_hoje.map((s,i)=>{const rot=s.produtos.join(' + ');ROTEIROS[rot]={nome:rot,min:s.min};
- return{hora:s.hora,voo:'VR'+(101+i),pulseira:pulsOv()['VR'+(101+i)]||PULS_ORDEM[i%4],pulsManual:!!pulsOv()['VR'+(101+i)],rot,prod:[...new Set(s.produtos.map(nomeProduto))].join(' + '),pax:s.pax,min:s.min,receita:s.receita,bookings:s.bookings,capacidade:s.capacidade,livres:s.livres}});
+ return{hora:s.hora,voo:'VR'+(101+i),pulseira:pulsOv()['VR'+(101+i)]||PULS_ORDEM[i%4],pulsManual:!!pulsOv()['VR'+(101+i)],rot,prod:[...new Set(s.produtos.map(nomeProduto))].join(' + '),pax:s.pax,min:s.min,receita:s.receita,bookings:s.bookings,capacidade:s.capacidade,livres:s.livres,clima:s.clima||null}});
 const hm=s=>{const[a,b]=s.split(':').map(Number);return a*60+b};
 const fmtHM=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(Math.floor(m%60)).padStart(2,'0');
 const param=k=>new URLSearchParams(location.search).get(k);
@@ -36,10 +36,10 @@ const HELINEWS=[[0,40,9750,'até 40h'],[41,50,9150,'41 a 50h'],[51,60,8950,'51 a
 const HORAS_MES=_R.mes.horas, VOOS_MES=_R.mes.voos;
 function faixa(h){const hh=Math.ceil(h);return HELINEWS.find(f=>hh>=f[0]&&hh<=f[1])||HELINEWS[0]}
 const TAXAS={plataforma:6.5,cartao:3.2}; // % ESTIMADOS: a Rezdy nao informa taxa de plataforma nem de cartao
-// clima: a Rezdy nao fornece
+// clima: digitado por voo em editar.html (v.clima = {cond:'verde'|'amarelo'|'vermelho', vento, vis})
 const CLIMA_HORA=null, CLIMA_SEMANA=null;
 const SEM_COR={verde:'#2e9d4f',amarelo:'#f5c400',vermelho:'#c62828'};
 const brl=n=>'R$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 const FALTA=t=>`<b class="falta">${t}</b>`;
 // selo de origem dos dados (a lista do que nao vem da Rezdy fica no README)
-function marcaOrigem(faltas){const a=document.querySelector('.amostra');if(a){const g=_R.gerado_em?_R.gerado_em.slice(11,16):'--:--';a.textContent=_R.gerado_em?`DADOS REZDY · ATUALIZADO ${g}`:'SEM DADOS DA REZDY';if(!_R.gerado_em)a.classList.add('falta')}}
+function marcaOrigem(faltas){const a=document.querySelector('.amostra');if(a){const g=_R.gerado_em?_R.gerado_em.slice(11,16):'--:--';a.textContent=_R.manual?'DADOS MANUAIS · EDITAR DADOS':_R.gerado_em?`DADOS REZDY · ATUALIZADO ${g}`:'SEM DADOS DA REZDY';if(!_R.gerado_em)a.classList.add('falta')}}

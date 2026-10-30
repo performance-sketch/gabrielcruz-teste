@@ -70,7 +70,7 @@ html,body{height:auto;min-height:1080px;overflow:auto}
 <div id="calc"></div>
 <div class="amostra">DADOS DE EXEMPLO</div>
 <script>// sempre a versao mais nova (o GitHub Pages guarda cache por 10 min)
-var _t=Date.now();document.write('<script src="assets/rezdy_dados.js?t='+_t+'"><\/script><script src="assets/dados.js?t='+_t+'"><\/script>')</script>
+var _t=Date.now();document.write('<script src="assets/manual.js?t='+_t+'"><\/script><script src="assets/dados.js?t='+_t+'"><\/script>')</script>
 <script>
 const n=x=>x.toLocaleString('pt-BR',{maximumFractionDigits:2}),div=(a,b)=>b?a/b:0,pct=x=>(x*100).toFixed(1).replace('.',',')+'%';
 const $=id=>document.getElementById(id);
@@ -131,7 +131,7 @@ function render(){const{L,hEst}=calc(),S=k=>SUM(L,k),pax=S('pax'),res=S(v=>v.bs.
   ['DESCONTOS / CORTESIAS',money(S(v=>v.pg.desconto||0))],['ESTORNOS',money(S(v=>v.pg.estorno||0))],['CANCELADAS',`${CN.n} res. · ${CN.pax} pax`],['A RECEBER',money(S('rec'))],['RECEITA / HORA',money(div(b,h))],['LÍQUIDO / HORA',money(div(S('l'),h))]];
  $('mn').innerHTML=mini.map(m=>`<div><span>${m[0]}</span><b>${m[1]}</b></div>`).join('');
  const M=x=>money(x),pv=v=>SEM_VALOR?'—':pct(div(v.l,v.b));
- $('tb').innerHTML=L.map(v=>`<tr class="${passou(v)?'':'fut'}"><td>${br(v.data)}</td><td>${v.hora}</td><td>${v.pulseira?`<span class="bl" style="background:${PULSEIRAS[v.pulseira]}"></span>`:''}${v.voo}${v.bookings.length?'':'<br><small class="tag">CANCELADO</small>'}</td><td>${[...new Set(v.produtos.map(nomeProduto))].join(' + ')}<br><small>${v.bs.map(b=>`<span class="${b.cancelada?'cx':''}">${b.order}${b.cortesia?' (cortesia)':''}</span>`).join(' · ')}</small></td><td>${v.pax}</td><td>${v.bs.length}</td><td>${Math.round(v.h*60)}</td><td><b>${M(v.b)}</b></td><td>${M(v.pg.stripe||0)}</td><td>${M(v.pg.paypal||0)}</td><td>${M(v.outras)}</td><td>${M(v.pg.ota||0)}</td><td>${M(v.pg.desconto||0)}</td><td>${M(v.tx)}</td><td>${M(v.ota)}</td><td>${M(v.c)}</td><td class="${v.l<0&&!SEM_VALOR?'neg':''}"><b>${M(v.l)}</b></td><td>${pv(v)}</td></tr>`).join('')||'<tr><td colspan=18>Sem voos na Rezdy neste período</td></tr>';
+ $('tb').innerHTML=L.map(v=>`<tr class="${passou(v)?'':'fut'}"><td>${br(v.data)}</td><td>${v.hora}</td><td>${v.pulseira?`<span class="bl" style="background:${PULSEIRAS[v.pulseira]}"></span>`:''}${v.voo}${v.bookings.length?'':'<br><small class="tag">CANCELADO</small>'}</td><td>${[...new Set(v.produtos.map(nomeProduto))].join(' + ')}<br><small>${v.bs.map(b=>`<span class="${b.cancelada?'cx':''}">${b.order}${b.cortesia?' (cortesia)':''}</span>`).join(' · ')}</small></td><td>${v.pax}</td><td>${v.bs.length}</td><td>${Math.round(v.h*60)}</td><td><b>${M(v.b)}</b></td><td>${M(v.pg.stripe||0)}</td><td>${M(v.pg.paypal||0)}</td><td>${M(v.outras)}</td><td>${M(v.pg.ota||0)}</td><td>${M(v.pg.desconto||0)}</td><td>${M(v.tx)}</td><td>${M(v.ota)}</td><td>${M(v.c)}</td><td class="${v.l<0&&!SEM_VALOR?'neg':''}"><b>${M(v.l)}</b></td><td>${pv(v)}</td></tr>`).join('')||'<tr><td colspan=18>Sem voos neste período. Cadastre em Editar dados.</td></tr>';
  $('tf').innerHTML=L.length?`<tr><td colspan=4>TOTAL DO PERÍODO</td><td>${pax}</td><td>${res}</td><td>${Math.round(S('h')*60)}</td><td>${M(b)}</td><td>${M(S(v=>v.pg.stripe||0))}</td><td>${M(S(v=>v.pg.paypal||0))}</td><td>${M(S('outras'))}</td><td>${M(S(v=>v.pg.ota||0))}</td><td>${M(S(v=>v.pg.desconto||0))}</td><td>${M(S('tx'))}</td><td>${M(S('ota'))}</td><td>${M(S('c'))}</td><td class="${S('l')<0&&!SEM_VALOR?'neg':''}">${M(S('l'))}</td><td>${SEM_VALOR?'—':pct(div(S('l'),b))}</td></tr>`:'';
  if(!SEM_VALOR)renderCalc(L,hEst)}
 // calculadora (so com a senha)
@@ -140,7 +140,7 @@ function renderCalc(L,hEst){const T=k=>SUM(L,v=>v.pg[k]||0),S=k=>SUM(L,k),b=S('b
  const linhas=MEIOS.map(m=>{const val=T(m[0]);return `<tr><td>${m[1]}</td><td>${brl(val)}</td><td><input type="number" step="0.01" min="0" value="${C.pct[m[0]]}" onchange="C.pct['${m[0]}']=+this.value||0;salva();render()"> %</td><td>${brl(val*C.pct[m[0]]/100)}</td></tr>`}).join('');
  $('calc').innerHTML=`<h2>CALCULADORA (TESTE) · AJUSTE PARA CHEGAR NO LÍQUIDO REAL DO PERÍODO</h2><div class="cg">
  <div class="cb"><h3>Taxas por forma de pagamento</h3><table class="ct"><thead><tr><th>FORMA</th><th>RECEBIDO</th><th>TAXA</th><th>VALOR</th></tr></thead><tbody>${linhas}
- <tr><td>OTA (GetYourGuide)</td><td>${brl(ota)}</td><td><label><input type="checkbox" ${C.otaRezdy?'checked':''} onchange="C.otaRezdy=this.checked;salva();render()"> comissão da Rezdy</label>${C.otaRezdy?'':` <input type="number" step="0.1" min="0" value="${C.otaPct}" onchange="C.otaPct=+this.value||0;salva();render()"> %`}</td><td>${brl(C.otaRezdy?com:ota*C.otaPct/100)}</td></tr>
+ <tr><td>OTA (GetYourGuide)</td><td>${brl(ota)}</td><td><label><input type="checkbox" ${C.otaRezdy?'checked':''} onchange="C.otaRezdy=this.checked;salva();render()"> comissão digitada</label>${C.otaRezdy?'':` <input type="number" step="0.1" min="0" value="${C.otaPct}" onchange="C.otaPct=+this.value||0;salva();render()"> %`}</td><td>${brl(C.otaRezdy?com:ota*C.otaPct/100)}</td></tr>
  <tr class="tt"><td>Total de taxas</td><td>${brl(b)}</td><td>${pct(div(S('t'),b))} efetivo</td><td>${brl(S('t'))}</td></tr></tbody></table>
  <p class="cn">Descontos e cortesias: ${brl(T('desconto'))} (fora da receita) · Estornos: ${brl(T('estorno'))}</p></div>
  <div class="cb"><h3>Helinews</h3>

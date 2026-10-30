@@ -1,0 +1,116 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vertical Rio Hub | Editar dados</title>
+<link rel="stylesheet" href="assets/base.css">
+<style>
+html,body{width:auto;height:auto;min-height:100vh;overflow:auto}
+main{max-width:1320px;margin:0 auto;padding:36px 32px 140px;animation:entra .6s ease}
+.topo{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}.placa-logo{padding:0;background:none}.placa-logo img{height:44px}
+h1{font-size:44px;font-weight:700;letter-spacing:-.03em;margin:36px 0 6px}.sub{font-size:18px;color:var(--suave);margin-bottom:28px;line-height:1.5}
+.ferr{display:flex;gap:10px;flex-wrap:wrap}
+.bt{font:inherit;font-size:15px;font-weight:600;border:none;background:var(--card);color:var(--tinta);border-radius:12px;padding:10px 16px;cursor:pointer}.bt:hover{outline:2px solid var(--tinta)}
+.bt.pri{background:var(--tinta);color:#fff}.bt.perigo{color:var(--erro)}.bt.peq{font-size:13px;padding:7px 12px;border-radius:10px}
+#salvo{font-size:14px;color:var(--suave);font-weight:600}
+.nav{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--card);border-radius:20px;padding:14px 18px;margin-bottom:12px}
+.nav .bt{background:#fff}
+.nav input[type=date]{font:inherit;font-size:20px;font-weight:600;padding:8px 12px;border:1px solid var(--linha);border-radius:12px;background:#fff}
+.nav .dl{font-size:18px;font-weight:600;margin-left:6px}.nav .tot{margin-left:auto;font-size:16px;color:var(--suave);font-weight:600}
+.dias{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}.dias button{font:inherit;font-size:13px;font-weight:600;border:1px solid var(--linha);background:#fff;border-radius:999px;padding:6px 12px;cursor:pointer}.dias button.on{background:var(--tinta);color:#fff;border-color:var(--tinta)}.dias button small{color:var(--suave);font-weight:500;margin-left:4px}.dias button.on small{color:#cfcdcd}
+.voo{background:#fff;border-radius:22px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 30px rgba(0,0,0,.05);padding:20px 22px;margin-bottom:16px}
+.vc{display:grid;grid-template-columns:130px minmax(200px,1.6fr) 100px 110px 150px 1fr 1fr;gap:12px;align-items:end}
+label{display:block;font-size:12px;font-weight:600;letter-spacing:.08em;color:var(--suave);text-transform:uppercase}
+[hidden]{display:none!important}
+.voo input,.voo select,.mes input{display:block;width:100%;margin-top:5px;font:inherit;font-size:17px;color:var(--tinta);padding:8px 10px;border:1px solid var(--linha);border-radius:10px;background:#fff}
+main input:focus,main select:focus{outline:2px solid var(--tinta);border-color:transparent}
+.vh{display:flex;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap}.vh b{font-size:22px}.vh .res{font-size:15px;color:var(--suave);font-weight:600}.vh .acoes{margin-left:auto;display:flex;gap:8px}
+table{width:100%;border-collapse:collapse;margin-top:16px}th{text-align:left;font-size:11px;letter-spacing:.1em;color:var(--suave);font-weight:600;padding:0 6px 4px}td{padding:3px 6px;vertical-align:middle}
+td input,td select{margin-top:0;font-size:15px;padding:6px 8px}td.ck{text-align:center}td.ck input{width:20px;height:20px;margin:0 auto}
+tr.cx input:not([type=checkbox]),tr.cx select{text-decoration:line-through;opacity:.55}
+.x{font:inherit;border:none;background:none;color:var(--suave);font-size:20px;cursor:pointer;padding:4px 8px;border-radius:8px}.x:hover{color:var(--erro);background:var(--card)}
+.vazio{background:var(--card);border-radius:22px;padding:40px;text-align:center;color:var(--suave);font-size:18px;margin-bottom:16px}
+.add{display:block;width:100%;font:inherit;font-size:18px;font-weight:600;border:2px dashed var(--linha);background:none;border-radius:22px;padding:22px;cursor:pointer;color:var(--tinta)}.add:hover{border-color:var(--tinta)}
+h2{font-size:15px;letter-spacing:.14em;color:var(--suave);font-weight:600;margin:44px 0 12px}
+.mes{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;background:var(--card);border-radius:22px;padding:20px 22px}.mes small{display:block;font-size:13px;color:var(--suave);margin-top:6px}
+.dica{font-size:14px;color:var(--suave);line-height:1.6;margin-top:10px}
+@media (max-width:1100px){.vc{grid-template-columns:repeat(3,1fr)}.vc .pr{grid-column:span 2}table{display:block;overflow-x:auto}}
+@media (max-width:640px){main{padding:24px 16px 100px}h1{font-size:32px}.vc{grid-template-columns:1fr 1fr}.mes{grid-template-columns:1fr}}
+</style></head><body><main>
+<div class="topo"><a class="placa-logo" href="index.html" title="Voltar ao menu"><img src="assets/logo_vertical_rio.svg" alt="Vertical Rio"></a>
+<div class="ferr"><span id="salvo"></span><button class="bt" id="exp">Exportar arquivo</button><button class="bt" id="imp">Importar arquivo</button><button class="bt" id="rez">Copiar da Rezdy</button><button class="bt perigo" id="zera">Apagar tudo</button><input type="file" id="arq" accept=".json,application/json" hidden></div></div>
+<h1>Editar dados</h1>
+<div class="sub">Voos, reservas, pax, valores e clima digitados à mão. As TVs, o iPad, a Central de Avisos e o Financeiro usam estes dados. Tudo salva sozinho <b>neste navegador</b>: para levar para outro aparelho, use Exportar e Importar.</div>
+<div class="nav"><button class="bt" id="ant" title="Dia anterior">‹</button><input type="date" id="dia"><button class="bt" id="prx" title="Dia seguinte">›</button><button class="bt" id="hj">Hoje</button><span class="dl" id="dl"></span><span class="tot" id="tot"></span></div>
+<div class="dias" id="dias"></div>
+<datalist id="prods"><option value="Doors off | 30min"><option value="Doors off | 45min"><option value="Doors off | 60min"><option value="Doors on | 30 min"><option value="Doors on | 45 min"></datalist>
+<datalist id="canais"><option value="Site"><option value="Balcão"><option value="WhatsApp"><option value="GetYourGuide"><option value="Viator"><option value="Agência"></datalist>
+<div id="voos"></div>
+<button class="add" id="novo">+ Adicionar voo neste dia</button>
+<h2>INDICADORES DO MÊS (TV ESCRITÓRIO)</h2>
+<div class="mes" id="mes"></div>
+<p class="dica">Em branco = calculado pelos voos do mês que já aconteceram. Preencha para usar outro número. Pulseira e status de cada voo continuam sendo trocados na TV Escritório ou no iPad.</p>
+</main>
+<script>window.EDITOR_MANUAL=true;document.write('<script src="assets/manual.js?t='+Date.now()+'"><\/script>')</script>
+<script>
+const $=id=>document.getElementById(id);
+let D=lerManual();
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+const brl=n=>'R$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+let sel;try{sel=sessionStorage.getItem('vrhub_ed_dia')}catch(e){}sel=sel||hojeRio();
+function salvar(){try{localStorage.setItem(MANUAL_KEY,JSON.stringify(D));$('salvo').textContent='Salvo '+agoraRioISO().slice(11,16)}catch(e){$('salvo').textContent='Não foi possível salvar neste navegador'}}
+const novaRes=()=>({id:uid(),order:'',pax:'',canal:'',forma:'',valor:'',comissao:'',a_receber:'',cancelada:false});
+const voosDoDia=()=>D.voos.filter(v=>v.data===sel).sort((a,b)=>(a.hora||'99').localeCompare(b.hora||'99'));
+// campos: data-v = voo, data-r = reserva ('' = campo do voo), data-k = chave
+const campo=(v,r,k,val,attrs='')=>`<input data-v="${v.id}" data-r="${r?r.id:''}" data-k="${k}" value="${esc(val)}" ${attrs}>`;
+function linhaRes(v,r){const m=`<select data-v="${v.id}" data-r="${r.id}" data-k="forma"><option value="">—</option>${MEIOS_PG.map(x=>`<option value="${x[0]}" ${r.forma===x[0]?'selected':''}>${x[1]}</option>`).join('')}</select>`;
+ return `<tr class="${r.cancelada?'cx':''}"><td>${campo(v,r,'order',r.order,'placeholder="VR…"')}</td><td style="width:80px">${campo(v,r,'pax',r.pax,'type="number" min="0" inputmode="numeric"')}</td><td>${campo(v,r,'canal',r.canal,'list="canais"')}</td><td>${m}</td>
+ <td style="width:120px">${campo(v,r,'valor',r.valor,'type="number" step="0.01" min="0" inputmode="decimal"')}</td><td style="width:110px">${campo(v,r,'comissao',r.comissao,`type="number" step="0.01" min="0" inputmode="decimal" ${r.forma==='ota'?'':'disabled placeholder="só OTA"'}`)}</td><td style="width:110px">${campo(v,r,'a_receber',r.a_receber,'type="number" step="0.01" min="0" inputmode="decimal"')}</td>
+ <td class="ck"><input type="checkbox" data-v="${v.id}" data-r="${r.id}" data-k="cancelada" ${r.cancelada?'checked':''}></td><td><button class="x" data-acao="delres" data-v="${v.id}" data-r="${r.id}" title="Remover reserva">×</button></td></tr>`}
+function resumo(v){const rs=v.reservas||[],at=rs.filter(r=>!r.cancelada),pax=at.reduce((a,r)=>a+(+r.pax||0),0),rec=at.reduce((a,r)=>a+(r.forma==='cortesia'?0:+r.valor||0),0);
+ return `${pax} pax · ${at.length} reserva${at.length===1?'':'s'}${rs.length>at.length?` · ${rs.length-at.length} cancelada${rs.length-at.length===1?'':'s'}`:''}${rec?' · '+brl(rec):''}${+v.capacidade?` · ${Math.max(0,+v.capacidade-pax)} vagas`:''}`}
+function render(){
+ $('dia').value=sel;try{sessionStorage.setItem('vrhub_ed_dia',sel)}catch(e){}
+ const dl=new Date(sel+'T12:00:00-03:00').toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',timeZone:'America/Sao_Paulo'});$('dl').textContent=dl.charAt(0).toUpperCase()+dl.slice(1)+(sel===hojeRio()?' · hoje':'');
+ const L=voosDoDia(),pax=L.reduce((a,v)=>a+(v.reservas||[]).filter(r=>!r.cancelada).reduce((x,r)=>x+(+r.pax||0),0),0);
+ $('tot').textContent=`${L.length} voo${L.length===1?'':'s'} · ${pax} pax`;
+ // atalhos: dias com voos perto do dia escolhido
+ const ds={};D.voos.forEach(v=>{if(v.data)ds[v.data]=(ds[v.data]||0)+1});
+ const perto=[...new Set([...Object.keys(ds),hojeRio()])].filter(d=>d>=somaDias(sel,-7)&&d<=somaDias(sel,21)).sort();
+ $('dias').innerHTML=perto.map(d=>`<button data-dia="${d}" class="${d===sel?'on':''}">${d.split('-').reverse().slice(0,2).join('/')}<small>${ds[d]||0}</small></button>`).join('');
+ $('voos').innerHTML=L.map((v,i)=>`<div class="voo"><div class="vh"><b>${v.hora||'--:--'}</b><span class="res" id="rs_${v.id}">${resumo(v)}</span><div class="acoes"><button class="bt peq" data-acao="dup" data-v="${v.id}">Duplicar</button><button class="bt peq perigo" data-acao="delvoo" data-v="${v.id}">Excluir voo</button></div></div>
+ <div class="vc"><label>Horário${campo(v,null,'hora',v.hora,'type="time"')}</label><label class="pr">Produto${campo(v,null,'produto',v.produto,'list="prods" placeholder="Doors off | 30min"')}</label><label>Minutos${campo(v,null,'min',v.min,'type="number" min="1" inputmode="numeric"')}</label><label>Capacidade${campo(v,null,'capacidade',v.capacidade,'type="number" min="0" inputmode="numeric"')}</label>
+ <label>Clima<select data-v="${v.id}" data-r="" data-k="clima_cond"><option value="">—</option>${[['verde','Favorável'],['amarelo','Atenção'],['vermelho','Desfavorável']].map(c=>`<option value="${c[0]}" ${v.clima_cond===c[0]?'selected':''}>${c[1]}</option>`).join('')}</select></label><label>Vento${campo(v,null,'clima_vento',v.clima_vento,'placeholder="ex.: 12 km/h NE"')}</label><label>Visibilidade${campo(v,null,'clima_vis',v.clima_vis,'placeholder="ex.: 10 km"')}</label></div>
+ <table><thead><tr><th>ORDER / Nº</th><th>PAX</th><th>CANAL</th><th>PAGAMENTO</th><th>VALOR R$</th><th>COMISSÃO OTA</th><th>A RECEBER</th><th>CANCELADA</th><th></th></tr></thead><tbody>${(v.reservas||[]).map(r=>linhaRes(v,r)).join('')}</tbody></table>
+ <button class="bt peq" style="margin-top:10px" data-acao="addres" data-v="${v.id}">+ Reserva</button></div>`).join('')||`<div class="vazio">Nenhum voo neste dia.</div>`;
+ renderMes()}
+function renderMes(){const a=montaRezdy(D,true).mes,m=D.mes||{};
+ $('mes').innerHTML=[['voos','Voos executados',''],['horas','Horas voadas','step="0.1"'],['pax','Passageiros','']].map(x=>`<label>${x[1]}<input data-mes="${x[0]}" type="number" min="0" ${x[2]} value="${esc(m[x[0]])}" placeholder="${a[x[0]].toLocaleString('pt-BR')} (automático)"><small>automático: ${a[x[0]].toLocaleString('pt-BR')}</small></label>`).join('')}
+// re-renderiza mantendo o foco no campo seguinte (o change dispara antes do foco mudar)
+function renderKeep(){setTimeout(()=>{const a=document.activeElement,k=a&&a.dataset&&a.dataset.k?[a.dataset.v,a.dataset.r||'',a.dataset.k]:null;render();
+ if(k){const e=document.querySelector(`[data-v="${k[0]}"][data-r="${k[1]}"][data-k="${k[2]}"]`);if(e)e.focus()}})}
+const acha=el=>{const v=D.voos.find(x=>x.id===el.dataset.v),r=v&&el.dataset.r?(v.reservas||[]).find(x=>x.id===el.dataset.r):null;return{v,r}};
+function grava(el){const{v,r}=acha(el);if(!v)return;const alvo=el.dataset.r?r:v;if(!alvo)return;alvo[el.dataset.k]=el.type==='checkbox'?el.checked:el.value;salvar();const s=$('rs_'+v.id);if(s)s.textContent=resumo(v)}
+$('voos').addEventListener('input',e=>{if(e.target.dataset.k)grava(e.target)});
+$('voos').addEventListener('change',e=>{const k=e.target.dataset.k;if(!k)return;grava(e.target);if(['hora','forma','cancelada'].includes(k))renderKeep()});
+$('voos').addEventListener('click',e=>{const b=e.target.closest('[data-acao]');if(!b)return;const{v,r}=acha(b),a=b.dataset.acao;
+ if(a==='addres'){v.reservas=v.reservas||[];v.reservas.push(novaRes());salvar();render();const ins=document.querySelectorAll(`[data-v="${v.id}"][data-k="order"]`);ins[ins.length-1].focus()}
+ if(a==='delres'&&confirm(`Remover a reserva ${r.order||''} (${r.pax||0} pax)?`)){v.reservas=v.reservas.filter(x=>x!==r);salvar();render()}
+ if(a==='delvoo'&&confirm(`Excluir o voo das ${v.hora||'--:--'} e as ${(v.reservas||[]).length} reservas dele?`)){D.voos=D.voos.filter(x=>x!==v);salvar();render()}
+ if(a==='dup'){const c=JSON.parse(JSON.stringify(v));c.id=uid();c.hora='';c.reservas=(c.reservas||[]).map(x=>({...x,id:uid()}));D.voos.push(c);salvar();render();document.querySelector(`[data-v="${c.id}"][data-k="hora"]`).focus()}});
+$('mes').addEventListener('input',e=>{const k=e.target.dataset.mes;if(!k)return;D.mes=D.mes||{};D.mes[k]=e.target.value;salvar()});
+$('novo').onclick=()=>{const v={id:uid(),data:sel,hora:'',produto:'',min:30,capacidade:'',reservas:[novaRes()]};D.voos.push(v);salvar();render();document.querySelector(`[data-v="${v.id}"][data-k="hora"]`).focus()};
+const irDia=d=>{if(d){sel=d;render()}};
+$('dia').onchange=()=>irDia($('dia').value);$('ant').onclick=()=>irDia(somaDias(sel,-1));$('prx').onclick=()=>irDia(somaDias(sel,1));$('hj').onclick=()=>irDia(hojeRio());
+$('dias').onclick=e=>{const b=e.target.closest('[data-dia]');if(b)irDia(b.dataset.dia)};
+// exportar / importar: leva os dados para outro aparelho
+$('exp').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(D,null,1)],{type:'application/json'}));a.download=`vertical-rio-hub-dados-${hojeRio()}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+$('imp').onclick=()=>$('arq').click();
+$('arq').onchange=()=>{const f=$('arq').files[0];if(!f)return;f.text().then(t=>{const d=JSON.parse(t);if(!d||!Array.isArray(d.voos))throw 0;
+ if(confirm(`Substituir os dados deste navegador pelos do arquivo (${d.voos.length} voos)?`)){D={mes:{},...d};salvar();render()}}).catch(()=>alert('Arquivo inválido: use um arquivo gerado em "Exportar arquivo".')).finally(()=>$('arq').value='')};
+$('zera').onclick=()=>{if(confirm(`Apagar todos os ${D.voos.length} voos e reservas deste navegador? Exporte antes se quiser guardar.`)){D={voos:[],mes:{}};salvar();render()}};
+// copia unica do ultimo arquivo da Rezdy (sem valores, que ficam criptografados): ponto de partida para editar
+$('rez').onclick=()=>{fetch('assets/rezdy_dados.js?t='+Date.now()).then(r=>r.text()).then(t=>{const i=t.indexOf('const REZDY='),j=t.indexOf(';\n',i);const R=JSON.parse(t.slice(i+12,j));
+ const conv=(b,c)=>({...novaRes(),order:b.order,pax:b.pax,canal:b.canal,cancelada:c});
+ const V=(R.periodo||R.voos_hoje).map(s=>({id:uid(),data:s.data,hora:s.hora,produto:s.produtos.join(' + '),min:s.min,capacidade:s.capacidade||'',reservas:[...s.bookings.map(b=>conv(b,false)),...(s.cancelados||[]).map(b=>conv(b,true))]}));
+ if(confirm(`Substituir os dados deste navegador por ${V.length} horários da Rezdy (cópia de ${R.gerado_em.slice(0,16).replace('T',' ')}, sem valores)?`)){D={voos:V,mes:{}};salvar();render()}}).catch(()=>alert('Não foi possível ler o arquivo da Rezdy.'))};
+window.addEventListener('storage',e=>{if(e.key===MANUAL_KEY){D=lerManual();render()}});
+render();
+</script></body></html>

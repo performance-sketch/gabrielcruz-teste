@@ -195,7 +195,7 @@ return of.apply(this,arguments)};
 var p=new URLSearchParams(location.search);window.__VR_PREFILL={voo:p.get('voo'),pulseira:p.get('pulseira'),status:p.get('status'),hora:p.get('hora')};
 document.addEventListener('DOMContentLoaded',function(){var d=document.createElement('div');d.textContent='AMBIENTE DE TESTE  |  voz do navegador, sem servidor'+(p.get('voo')?'  |  voo '+p.get('voo')+', pulseira '+(p.get('pulseira')||'')+', '+(p.get('status')||''):'');d.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99999;background:#f5c400;color:#231F20;font:600 13px system-ui;text-align:center;padding:6px';document.body.appendChild(d);var a=document.createElement('a');a.href='index.html';a.textContent='Voltar ao Hub';a.style.cssText='position:fixed;bottom:12px;left:12px;z-index:99999;background:#231F20;color:#fff;padding:8px 14px;border-radius:20px;font:600 13px system-ui;text-decoration:none';document.body.appendChild(a)});
 })();</script><script>// voos do dia (Rezdy) para preencher a chamada vinda do iPad
-document.write('<script src="assets/rezdy_dados.js?t='+Date.now()+'"><\/script>')</script>
+document.write('<script src="assets/manual.js?t='+Date.now()+'"><\/script>')</script>
 <script id="logica">
 /* ===== LÓGICA PURA (testável sem navegador) ===== */
 var IDIOMAS = [
@@ -798,8 +798,8 @@ if(typeof module!=='undefined'){ module.exports={ENCERRAMENTO_REF:ENCERRAMENTO_R
     if(modeloPorId('voo')) $('modelo').value='voo';
     preenche(true);
     var info=$('rezdyInfo'); info.hidden=false;
-    info.textContent = s ? 'Rezdy: voo '+pf.voo+' das '+s.hora+' · '+s.produtos.join(' + ')+' · '+s.pax+' pax · '+s.bookings.length+' reservas ('+s.bookings.map(function(b){return b.order;}).join(', ')+')'+(pf.status?' · status '+pf.status:'')
-                         : 'Voo '+pf.voo+' não encontrado nos voos de hoje da Rezdy'+(hora?'; horário vindo do iPad: '+hora:'')+'. Confira antes de falar.';
+    info.textContent = s ? 'Agenda: voo '+pf.voo+' das '+s.hora+' · '+s.produtos.join(' + ')+' · '+s.pax+' pax · '+s.bookings.length+' reservas ('+s.bookings.map(function(b){return b.order;}).join(', ')+')'+(pf.status?' · status '+pf.status:'')
+                         : 'Voo '+pf.voo+' não encontrado nos voos de hoje'+(hora?'; horário vindo do iPad: '+hora:'')+'. Confira antes de falar.';
   })();
   verificaSessao(); /* a chave nunca vem ao navegador; o cookie de sessão é HttpOnly */
 })();

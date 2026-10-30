@@ -1,9 +1,8 @@
 name: Sync Rezdy
 
+# desligado: a área de testes agora usa dados digitados à mão (editar.html)
+# só roda se alguém disparar manualmente na aba Actions
 on:
-  schedule:
-    # a cada 15 min, das 07h às 21h (Rio = UTC-3)
-    - cron: '*/15 10-23 * * *'
   workflow_dispatch:
 
 concurrency:
