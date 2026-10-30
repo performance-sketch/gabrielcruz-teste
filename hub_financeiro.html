@@ -32,7 +32,7 @@ td{border-bottom:1px solid #f0f0f3;font-weight:500}
 .prem{background:#fdf6d8;border-left:none;border-radius:16px;font-weight:500;font-size:17px;padding:16px 20px}.prem br+*{}
 .neg{color:var(--erro)}
 .bl{border-radius:6px;box-shadow:none}
-html,body{height:auto;min-height:1080px;overflow:auto}
+html{width:auto;height:auto;overflow:auto}body{width:1920px;height:auto;min-height:100vh;overflow:visible;margin:0 auto}
 #cofre{margin:0 70px 18px;background:var(--tinta);color:#fff;border-radius:20px;padding:18px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}#cofre b{font-size:15px;letter-spacing:.14em}#cofre span{font-size:16px;color:#cfcdcd}
 #cofre input{font:inherit;font-size:18px;padding:10px 14px;border-radius:12px;border:none;width:260px}#cofre button{font:inherit;font-size:16px;font-weight:600;padding:10px 20px;border-radius:12px;border:none;background:#f5c400;cursor:pointer}#cofre em{font-style:normal;color:#ffb4a8}
 .k b .falta,td .falta{font-size:30px;letter-spacing:0}td .falta{font-size:15px;font-weight:600;color:var(--suave)}
@@ -71,7 +71,8 @@ html,body{height:auto;min-height:1080px;overflow:auto}
 <div class="amostra">DADOS DE EXEMPLO</div>
 <script>// sempre a versao mais nova (o GitHub Pages guarda cache por 10 min)
 var _t=Date.now();document.write('<script src="assets/manual.js?t='+_t+'"><\/script><script src="assets/dados.js?t='+_t+'"><\/script>')</script>
-<script>
+<script>// desenhado para 1920 px: em janelas menores diminui por igual e fica centralizado
+(()=>{const z=()=>document.body.style.zoom=Math.min(1,document.documentElement.clientWidth/1920);z();addEventListener('resize',z)})();
 const n=x=>x.toLocaleString('pt-BR',{maximumFractionDigits:2}),div=(a,b)=>b?a/b:0,pct=x=>(x*100).toFixed(1).replace('.',',')+'%';
 const $=id=>document.getElementById(id);
 // todos os horarios do historico (Rezdy); codigo do voo por dia (VR101, VR102...) como nas outras telas

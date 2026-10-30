@@ -43,3 +43,8 @@ const brl=n=>'R$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFrac
 const FALTA=t=>`<b class="falta">${t}</b>`;
 // selo de origem dos dados (a lista do que nao vem da Rezdy fica no README)
 function marcaOrigem(faltas){const a=document.querySelector('.amostra');if(a){const g=_R.gerado_em?_R.gerado_em.slice(11,16):'--:--';a.textContent=_R.manual?'DADOS MANUAIS · EDITAR DADOS':_R.gerado_em?`DADOS REZDY · ATUALIZADO ${g}`:'SEM DADOS DA REZDY';if(!_R.gerado_em)a.classList.add('falta')}}
+// telas de tamanho fixo (TV 1920x1080, iPad 1180x820): encaixa na janela e centraliza; ?captura=1 mantem o tamanho original
+(function(){const b=document.body,cs=b&&getComputedStyle(b);if(!b||cs.overflow!=='hidden'||param('captura'))return;
+ const W=parseFloat(cs.width),H=parseFloat(cs.height),h=document.documentElement;h.style.width='100vw';h.style.height='100vh';h.style.overflow='hidden';b.style.transformOrigin='0 0';
+ const fit=()=>{const s=Math.min(innerWidth/W,innerHeight/H);b.style.transform=`translate(${(innerWidth-W*s)/2}px,${(innerHeight-H*s)/2}px) scale(${s})`};
+ fit();addEventListener('resize',fit)})();
