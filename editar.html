@@ -23,6 +23,7 @@ main input:focus,main select:focus{outline:2px solid var(--tinta);border-color:t
 .vh{display:flex;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap}.vh b{font-size:22px}.vh .res{font-size:15px;color:var(--suave);font-weight:600}.vh .acoes{margin-left:auto;display:flex;gap:8px}
 table{width:100%;border-collapse:collapse;margin-top:16px}th{text-align:left;font-size:11px;letter-spacing:.1em;color:var(--suave);font-weight:600;padding:0 6px 4px}td{padding:3px 6px;vertical-align:middle}
 td input,td select{margin-top:0;font-size:15px;padding:6px 8px}td.ck{text-align:center}td.ck input{width:20px;height:20px;margin:0 auto}
+select.hr{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
 tr.cx input:not([type=checkbox]),tr.cx select{text-decoration:line-through;opacity:.55}
 .x{font:inherit;border:none;background:none;color:var(--suave);font-size:20px;cursor:pointer;padding:4px 8px;border-radius:8px}.x:hover{color:var(--erro);background:var(--card)}
 .vazio{background:var(--card);border-radius:22px;padding:40px;text-align:center;color:var(--suave);font-size:18px;margin-bottom:16px}
@@ -60,6 +61,10 @@ const voosDoDia=()=>D.voos.filter(v=>v.data===sel).sort((a,b)=>(a.hora||'99').lo
 const campo=(v,r,k,val,attrs='')=>`<input data-v="${v.id}" data-r="${r?r.id:''}" data-k="${k}" value="${esc(val)}" ${attrs}>`;
 function linhaRes(v,r){return `<tr class="${r.cancelada?'cx':''}"><td>${campo(v,r,'order',r.order,'placeholder="VR…"')}</td><td style="width:120px">${campo(v,r,'pax',r.pax,'type="number" min="0" inputmode="numeric"')}</td>
  <td class="ck" style="width:110px"><input type="checkbox" data-v="${v.id}" data-r="${r.id}" data-k="cancelada" ${r.cancelada?'checked':''}></td><td style="width:50px"><button class="x" data-acao="delres" data-v="${v.id}" data-r="${r.id}" title="Remover reserva">×</button></td></tr>`}
+// horario: lista de 15 em 15 min (06:00 a 22:00), um toque para trocar; horario fora da lista continua aparecendo
+const HORAS=[];for(let m=6*60;m<=22*60;m+=15)HORAS.push(String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'));
+function selHora(v){const hs=v.hora&&!HORAS.includes(v.hora)?[...HORAS,v.hora].sort():HORAS;
+ return `<select class="hr" data-v="${v.id}" data-r="" data-k="hora"><option value="">Escolha</option>${hs.map(h=>`<option ${h===v.hora?'selected':''}>${h}</option>`).join('')}</select>`}
 function resumo(v){const rs=v.reservas||[],at=rs.filter(r=>!r.cancelada),pax=at.reduce((a,r)=>a+(+r.pax||0),0);
  return `${pax} pax · ${at.length} reserva${at.length===1?'':'s'}${rs.length>at.length?` · ${rs.length-at.length} cancelada${rs.length-at.length===1?'':'s'}`:''}${+v.capacidade?` · ${Math.max(0,+v.capacidade-pax)} vagas`:''}`}
 function render(){
@@ -72,7 +77,7 @@ function render(){
  const perto=[...new Set([...Object.keys(ds),hojeRio()])].filter(d=>d>=somaDias(sel,-7)&&d<=somaDias(sel,21)).sort();
  $('dias').innerHTML=perto.map(d=>`<button data-dia="${d}" class="${d===sel?'on':''}">${d.split('-').reverse().slice(0,2).join('/')}<small>${ds[d]||0}</small></button>`).join('');
  $('voos').innerHTML=L.map((v,i)=>`<div class="voo"><div class="vh"><b>${v.hora||'--:--'}</b><span class="res" id="rs_${v.id}">${resumo(v)}</span><div class="acoes"><button class="bt peq" data-acao="dup" data-v="${v.id}">Duplicar</button><button class="bt peq perigo" data-acao="delvoo" data-v="${v.id}">Excluir voo</button></div></div>
- <div class="vc"><label>Horário${campo(v,null,'hora',v.hora,'type="time"')}</label><label class="pr">Produto${campo(v,null,'produto',v.produto,'list="prods" placeholder="Doors off | 30min"')}</label><label>Minutos${campo(v,null,'min',v.min,'type="number" min="1" inputmode="numeric"')}</label><label>Capacidade${campo(v,null,'capacidade',v.capacidade,'type="number" min="0" inputmode="numeric"')}</label>
+ <div class="vc"><label>Horário${selHora(v)}</label><label class="pr">Produto${campo(v,null,'produto',v.produto,'list="prods" placeholder="Doors off | 30min"')}</label><label>Minutos${campo(v,null,'min',v.min,'type="number" min="1" inputmode="numeric"')}</label><label>Capacidade${campo(v,null,'capacidade',v.capacidade,'type="number" min="0" inputmode="numeric"')}</label>
  <label>Clima<select data-v="${v.id}" data-r="" data-k="clima_cond"><option value="">—</option>${[['verde','Favorável'],['amarelo','Atenção'],['vermelho','Desfavorável']].map(c=>`<option value="${c[0]}" ${v.clima_cond===c[0]?'selected':''}>${c[1]}</option>`).join('')}</select></label><label>Vento${campo(v,null,'clima_vento',v.clima_vento,'placeholder="ex.: 12 km/h NE"')}</label><label>Visibilidade${campo(v,null,'clima_vis',v.clima_vis,'placeholder="ex.: 10 km"')}</label></div>
  <table><thead><tr><th>ORDER / Nº</th><th>PAX</th><th>CANCELADA</th><th></th></tr></thead><tbody>${(v.reservas||[]).map(r=>linhaRes(v,r)).join('')}</tbody></table>
  <button class="bt peq" style="margin-top:10px" data-acao="addres" data-v="${v.id}">+ Reserva</button></div>`).join('')||`<div class="vazio">Nenhum voo neste dia.</div>`;
