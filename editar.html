@@ -36,11 +36,10 @@ h2{font-size:15px;letter-spacing:.14em;color:var(--suave);font-weight:600;margin
 <div class="topo"><a class="placa-logo" href="index.html" title="Voltar ao menu"><img src="assets/logo_vertical_rio.svg" alt="Vertical Rio"></a>
 <div class="ferr"><span id="salvo"></span><button class="bt" id="exp">Exportar arquivo</button><button class="bt" id="imp">Importar arquivo</button><button class="bt" id="rez">Copiar da Rezdy</button><button class="bt perigo" id="zera">Apagar tudo</button><input type="file" id="arq" accept=".json,application/json" hidden></div></div>
 <h1>Editar dados</h1>
-<div class="sub">Voos, reservas, pax, valores e clima digitados à mão. As TVs, o iPad, a Central de Avisos e o Financeiro usam estes dados. Tudo salva sozinho <b>neste navegador</b>: para levar para outro aparelho, use Exportar e Importar.</div>
+<div class="sub">Voos, reservas, pax e clima digitados à mão. As TVs, o iPad, a Central de Avisos e o Financeiro usam estes dados. Tudo salva sozinho <b>neste navegador</b>: para levar para outro aparelho, use Exportar e Importar.</div>
 <div class="nav"><button class="bt" id="ant" title="Dia anterior">‹</button><input type="date" id="dia"><button class="bt" id="prx" title="Dia seguinte">›</button><button class="bt" id="hj">Hoje</button><span class="dl" id="dl"></span><span class="tot" id="tot"></span></div>
 <div class="dias" id="dias"></div>
 <datalist id="prods"><option value="Doors off | 30min"><option value="Doors off | 45min"><option value="Doors off | 60min"><option value="Doors on | 30 min"><option value="Doors on | 45 min"></datalist>
-<datalist id="canais"><option value="Site"><option value="Balcão"><option value="WhatsApp"><option value="GetYourGuide"><option value="Viator"><option value="Agência"></datalist>
 <div id="voos"></div>
 <button class="add" id="novo">+ Adicionar voo neste dia</button>
 <h2>INDICADORES DO MÊS (TV ESCRITÓRIO)</h2>
@@ -53,19 +52,16 @@ const $=id=>document.getElementById(id);
 let D=lerManual();
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
-const brl=n=>'R$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 let sel;try{sel=sessionStorage.getItem('vrhub_ed_dia')}catch(e){}sel=sel||hojeRio();
 function salvar(){try{localStorage.setItem(MANUAL_KEY,JSON.stringify(D));$('salvo').textContent='Salvo '+agoraRioISO().slice(11,16)}catch(e){$('salvo').textContent='Não foi possível salvar neste navegador'}}
-const novaRes=()=>({id:uid(),order:'',pax:'',canal:'',forma:'',valor:'',comissao:'',a_receber:'',cancelada:false});
+const novaRes=()=>({id:uid(),order:'',pax:'',cancelada:false});
 const voosDoDia=()=>D.voos.filter(v=>v.data===sel).sort((a,b)=>(a.hora||'99').localeCompare(b.hora||'99'));
 // campos: data-v = voo, data-r = reserva ('' = campo do voo), data-k = chave
 const campo=(v,r,k,val,attrs='')=>`<input data-v="${v.id}" data-r="${r?r.id:''}" data-k="${k}" value="${esc(val)}" ${attrs}>`;
-function linhaRes(v,r){const m=`<select data-v="${v.id}" data-r="${r.id}" data-k="forma"><option value="">—</option>${MEIOS_PG.map(x=>`<option value="${x[0]}" ${r.forma===x[0]?'selected':''}>${x[1]}</option>`).join('')}</select>`;
- return `<tr class="${r.cancelada?'cx':''}"><td>${campo(v,r,'order',r.order,'placeholder="VR…"')}</td><td style="width:80px">${campo(v,r,'pax',r.pax,'type="number" min="0" inputmode="numeric"')}</td><td>${campo(v,r,'canal',r.canal,'list="canais"')}</td><td>${m}</td>
- <td style="width:120px">${campo(v,r,'valor',r.valor,'type="number" step="0.01" min="0" inputmode="decimal"')}</td><td style="width:110px">${campo(v,r,'comissao',r.comissao,`type="number" step="0.01" min="0" inputmode="decimal" ${r.forma==='ota'?'':'disabled placeholder="só OTA"'}`)}</td><td style="width:110px">${campo(v,r,'a_receber',r.a_receber,'type="number" step="0.01" min="0" inputmode="decimal"')}</td>
- <td class="ck"><input type="checkbox" data-v="${v.id}" data-r="${r.id}" data-k="cancelada" ${r.cancelada?'checked':''}></td><td><button class="x" data-acao="delres" data-v="${v.id}" data-r="${r.id}" title="Remover reserva">×</button></td></tr>`}
-function resumo(v){const rs=v.reservas||[],at=rs.filter(r=>!r.cancelada),pax=at.reduce((a,r)=>a+(+r.pax||0),0),rec=at.reduce((a,r)=>a+(r.forma==='cortesia'?0:+r.valor||0),0);
- return `${pax} pax · ${at.length} reserva${at.length===1?'':'s'}${rs.length>at.length?` · ${rs.length-at.length} cancelada${rs.length-at.length===1?'':'s'}`:''}${rec?' · '+brl(rec):''}${+v.capacidade?` · ${Math.max(0,+v.capacidade-pax)} vagas`:''}`}
+function linhaRes(v,r){return `<tr class="${r.cancelada?'cx':''}"><td>${campo(v,r,'order',r.order,'placeholder="VR…"')}</td><td style="width:120px">${campo(v,r,'pax',r.pax,'type="number" min="0" inputmode="numeric"')}</td>
+ <td class="ck" style="width:110px"><input type="checkbox" data-v="${v.id}" data-r="${r.id}" data-k="cancelada" ${r.cancelada?'checked':''}></td><td style="width:50px"><button class="x" data-acao="delres" data-v="${v.id}" data-r="${r.id}" title="Remover reserva">×</button></td></tr>`}
+function resumo(v){const rs=v.reservas||[],at=rs.filter(r=>!r.cancelada),pax=at.reduce((a,r)=>a+(+r.pax||0),0);
+ return `${pax} pax · ${at.length} reserva${at.length===1?'':'s'}${rs.length>at.length?` · ${rs.length-at.length} cancelada${rs.length-at.length===1?'':'s'}`:''}${+v.capacidade?` · ${Math.max(0,+v.capacidade-pax)} vagas`:''}`}
 function render(){
  $('dia').value=sel;try{sessionStorage.setItem('vrhub_ed_dia',sel)}catch(e){}
  const dl=new Date(sel+'T12:00:00-03:00').toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',timeZone:'America/Sao_Paulo'});$('dl').textContent=dl.charAt(0).toUpperCase()+dl.slice(1)+(sel===hojeRio()?' · hoje':'');
@@ -78,7 +74,7 @@ function render(){
  $('voos').innerHTML=L.map((v,i)=>`<div class="voo"><div class="vh"><b>${v.hora||'--:--'}</b><span class="res" id="rs_${v.id}">${resumo(v)}</span><div class="acoes"><button class="bt peq" data-acao="dup" data-v="${v.id}">Duplicar</button><button class="bt peq perigo" data-acao="delvoo" data-v="${v.id}">Excluir voo</button></div></div>
  <div class="vc"><label>Horário${campo(v,null,'hora',v.hora,'type="time"')}</label><label class="pr">Produto${campo(v,null,'produto',v.produto,'list="prods" placeholder="Doors off | 30min"')}</label><label>Minutos${campo(v,null,'min',v.min,'type="number" min="1" inputmode="numeric"')}</label><label>Capacidade${campo(v,null,'capacidade',v.capacidade,'type="number" min="0" inputmode="numeric"')}</label>
  <label>Clima<select data-v="${v.id}" data-r="" data-k="clima_cond"><option value="">—</option>${[['verde','Favorável'],['amarelo','Atenção'],['vermelho','Desfavorável']].map(c=>`<option value="${c[0]}" ${v.clima_cond===c[0]?'selected':''}>${c[1]}</option>`).join('')}</select></label><label>Vento${campo(v,null,'clima_vento',v.clima_vento,'placeholder="ex.: 12 km/h NE"')}</label><label>Visibilidade${campo(v,null,'clima_vis',v.clima_vis,'placeholder="ex.: 10 km"')}</label></div>
- <table><thead><tr><th>ORDER / Nº</th><th>PAX</th><th>CANAL</th><th>PAGAMENTO</th><th>VALOR R$</th><th>COMISSÃO OTA</th><th>A RECEBER</th><th>CANCELADA</th><th></th></tr></thead><tbody>${(v.reservas||[]).map(r=>linhaRes(v,r)).join('')}</tbody></table>
+ <table><thead><tr><th>ORDER / Nº</th><th>PAX</th><th>CANCELADA</th><th></th></tr></thead><tbody>${(v.reservas||[]).map(r=>linhaRes(v,r)).join('')}</tbody></table>
  <button class="bt peq" style="margin-top:10px" data-acao="addres" data-v="${v.id}">+ Reserva</button></div>`).join('')||`<div class="vazio">Nenhum voo neste dia.</div>`;
  renderMes()}
 function renderMes(){const a=montaRezdy(D,true).mes,m=D.mes||{};
@@ -89,7 +85,7 @@ function renderKeep(){setTimeout(()=>{const a=document.activeElement,k=a&&a.data
 const acha=el=>{const v=D.voos.find(x=>x.id===el.dataset.v),r=v&&el.dataset.r?(v.reservas||[]).find(x=>x.id===el.dataset.r):null;return{v,r}};
 function grava(el){const{v,r}=acha(el);if(!v)return;const alvo=el.dataset.r?r:v;if(!alvo)return;alvo[el.dataset.k]=el.type==='checkbox'?el.checked:el.value;salvar();const s=$('rs_'+v.id);if(s)s.textContent=resumo(v)}
 $('voos').addEventListener('input',e=>{if(e.target.dataset.k)grava(e.target)});
-$('voos').addEventListener('change',e=>{const k=e.target.dataset.k;if(!k)return;grava(e.target);if(['hora','forma','cancelada'].includes(k))renderKeep()});
+$('voos').addEventListener('change',e=>{const k=e.target.dataset.k;if(!k)return;grava(e.target);if(['hora','cancelada'].includes(k))renderKeep()});
 $('voos').addEventListener('click',e=>{const b=e.target.closest('[data-acao]');if(!b)return;const{v,r}=acha(b),a=b.dataset.acao;
  if(a==='addres'){v.reservas=v.reservas||[];v.reservas.push(novaRes());salvar();render();const ins=document.querySelectorAll(`[data-v="${v.id}"][data-k="order"]`);ins[ins.length-1].focus()}
  if(a==='delres'&&confirm(`Remover a reserva ${r.order||''} (${r.pax||0} pax)?`)){v.reservas=v.reservas.filter(x=>x!==r);salvar();render()}
@@ -108,7 +104,7 @@ $('arq').onchange=()=>{const f=$('arq').files[0];if(!f)return;f.text().then(t=>{
 $('zera').onclick=()=>{if(confirm(`Apagar todos os ${D.voos.length} voos e reservas deste navegador? Exporte antes se quiser guardar.`)){D={voos:[],mes:{}};salvar();render()}};
 // copia unica do ultimo arquivo da Rezdy (sem valores, que ficam criptografados): ponto de partida para editar
 $('rez').onclick=()=>{fetch('assets/rezdy_dados.js?t='+Date.now()).then(r=>r.text()).then(t=>{const i=t.indexOf('const REZDY='),j=t.indexOf(';\n',i);const R=JSON.parse(t.slice(i+12,j));
- const conv=(b,c)=>({...novaRes(),order:b.order,pax:b.pax,canal:b.canal,cancelada:c});
+ const conv=(b,c)=>({...novaRes(),order:b.order,pax:b.pax,cancelada:c});
  const V=(R.periodo||R.voos_hoje).map(s=>({id:uid(),data:s.data,hora:s.hora,produto:s.produtos.join(' + '),min:s.min,capacidade:s.capacidade||'',reservas:[...s.bookings.map(b=>conv(b,false)),...(s.cancelados||[]).map(b=>conv(b,true))]}));
  if(confirm(`Substituir os dados deste navegador por ${V.length} horários da Rezdy (cópia de ${R.gerado_em.slice(0,16).replace('T',' ')}, sem valores)?`)){D={voos:V,mes:{}};salvar();render()}}).catch(()=>alert('Não foi possível ler o arquivo da Rezdy.'))};
 window.addEventListener('storage',e=>{if(e.key===MANUAL_KEY){D=lerManual();render()}});
